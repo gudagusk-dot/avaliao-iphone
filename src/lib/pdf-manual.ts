@@ -762,53 +762,54 @@ function pageButtonsDiagram(ctx: Ctx) {
     { font, size: 11, color: GRAY },
   );
 
-  // Large phone front in center
-  const phoneW = 160;
-  const phoneH = 340;
+  // Large phone front in center — y = bottom-left
+  const phoneW = 150;
+  const phoneH = 310;
   const px = (PW - phoneW) / 2;
-  const py = PH - 510;
-  drawPhoneFront(page, font, { x: px, y: py, w: phoneW, h: phoneH });
+  const pyBottom = PH - 470; // bottom of phone; top = PH-160
+  drawPhoneFront(page, font, { x: px, y: pyBottom, w: phoneW, h: phoneH });
 
-  // Left side buttons (drawn as black bars sticking out)
+  // Left side buttons (drawn as black bars sticking out of left edge)
   const leftBtns = [
-    { y: py + phoneH * 0.78, label: "Action Button", desc: "Pressione e segure" },
-    { y: py + phoneH * 0.65, label: "Volume +", desc: "Pressione 1x" },
-    { y: py + phoneH * 0.55, label: "Volume -", desc: "Pressione 1x" },
+    { y: pyBottom + phoneH * 0.78, label: "Action Button", desc: "Pressione e segure" },
+    { y: pyBottom + phoneH * 0.66, label: "Volume +", desc: "Pressione 1x" },
+    { y: pyBottom + phoneH * 0.58, label: "Volume -", desc: "Pressione 1x" },
   ];
   leftBtns.forEach((b) => {
-    page.drawRectangle({ x: px - 4, y: b.y, width: 5, height: 8, color: BLACK });
-    callout(page, font, px - 4, b.y + 4, px - 80, b.y + 4, b.label, "left", 8);
+    page.drawRectangle({ x: px - 4, y: b.y, width: 5, height: 10, color: BLACK });
+    callout(page, font, px - 4, b.y + 5, px - 70, b.y + 5, b.label, "left", 8);
+    const dw = font.widthOfTextAtSize(b.desc, 7);
     page.drawText(b.desc, {
-      x: px - 80 - font.widthOfTextAtSize(b.desc, 7),
-      y: b.y - 5,
+      x: px - 70 - dw,
+      y: b.y - 4,
       size: 7,
       font,
       color: GRAY,
     });
   });
 
-  // Right side
+  // Right side buttons
   const rightBtns = [
-    { y: py + phoneH * 0.7, label: "Botão lateral (Power)", desc: "Liga/desliga, screenshot" },
-    { y: py + phoneH * 0.55, label: "Camera Control", desc: "Pressione (15/16 Pro)" },
+    { y: pyBottom + phoneH * 0.72, label: "Botão lateral (Power)", desc: "Liga/desliga, screenshot" },
+    { y: pyBottom + phoneH * 0.55, label: "Camera Control", desc: "Pressione (15/16 Pro)" },
   ];
   rightBtns.forEach((b) => {
-    page.drawRectangle({ x: px + phoneW - 1, y: b.y, width: 5, height: 12, color: BLACK });
-    callout(page, font, px + phoneW + 4, b.y + 6, px + phoneW + 70, b.y + 6, b.label, "right", 8);
+    page.drawRectangle({ x: px + phoneW - 1, y: b.y, width: 5, height: 14, color: BLACK });
+    callout(page, font, px + phoneW + 4, b.y + 7, px + phoneW + 60, b.y + 7, b.label, "right", 8);
     page.drawText(b.desc, {
-      x: px + phoneW + 73,
-      y: b.y - 5,
+      x: px + phoneW + 63,
+      y: b.y - 4,
       size: 7,
       font,
       color: GRAY,
     });
   });
 
-  // checklist below
-  let yy = py - 25;
-  drawDivider(page, yy + 10);
-  drawText(page, "Checklist dos botões", MARGIN, yy - 5, { font: bold, size: 12 });
-  yy -= 25;
+  // Checklist below the phone
+  let yy = pyBottom - 25;
+  drawDivider(page, yy + 12);
+  drawText(page, "Checklist dos botões", MARGIN, yy, { font: bold, size: 12 });
+  yy -= 22;
   const items = [
     "Action Button / switch mute alterna corretamente",
     "Volume + aumenta o volume",
