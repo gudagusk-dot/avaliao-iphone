@@ -632,85 +632,123 @@ function pageVideoScript(ctx: Ctx) {
     { font, size: 11, color: GRAY },
   );
 
-  // 5 mini-diagrams horizontally
-  const diagramsY = PH - 320;
-  const phoneH = 130;
-  const phoneW = 65;
-  const sideW = 16;
-  const baseW = 65;
-  const baseH = 18;
-  const gap = 20;
+  // Top of diagram row
+  const diagTop = PH - 145;
+  const phoneH = 120;
+  const phoneW = 60;
+  const sideW = 14;
+  const baseW = 60;
+  const baseH = 14;
+  const diagBottom = diagTop - phoneH;
+  const labelY = diagBottom - 12;
+  const subLabelY = diagBottom - 22;
 
-  // total width: 4 phones + side + base + gaps... let's just lay them out:
-  let cx = MARGIN + 5;
+  // Five columns, evenly spaced
+  const colCount = 5;
+  const colW = (PW - MARGIN * 2) / colCount;
+  const colCenters = Array.from({ length: colCount }, (_, i) => MARGIN + colW * (i + 0.5));
 
   // 1. Front
-  drawPhoneFront(page, font, { x: cx, y: diagramsY, w: phoneW, h: phoneH });
-  drawText(page, "1. Frente", cx, diagramsY - 14, { font: bold, size: 9 });
-  drawText(page, "15 seg", cx, diagramsY - 26, { font, size: 8, color: GRAY });
-  cx += phoneW + gap;
+  drawPhoneFront(page, font, {
+    x: colCenters[0] - phoneW / 2,
+    y: diagBottom,
+    w: phoneW,
+    h: phoneH,
+  });
+  centerLabel(page, "1. Frente", colCenters[0], labelY, bold, 9);
+  centerLabel(page, "15 seg", colCenters[0], subLabelY, font, 8, GRAY);
 
   // 2. Back
-  drawPhoneBack(page, font, { x: cx, y: diagramsY, w: phoneW, h: phoneH });
-  drawText(page, "2. Verso", cx, diagramsY - 14, { font: bold, size: 9 });
-  drawText(page, "20 seg", cx, diagramsY - 26, { font, size: 8, color: GRAY });
-  cx += phoneW + gap;
+  drawPhoneBack(page, font, {
+    x: colCenters[1] - phoneW / 2,
+    y: diagBottom,
+    w: phoneW,
+    h: phoneH,
+  });
+  centerLabel(page, "2. Verso", colCenters[1], labelY, bold, 9);
+  centerLabel(page, "20 seg", colCenters[1], subLabelY, font, 8, GRAY);
 
   // 3. Left side
-  drawPhoneLeftSide(page, font, { x: cx, y: diagramsY, w: sideW, h: phoneH });
-  drawText(page, "3. Esquerda", cx - 5, diagramsY - 14, { font: bold, size: 9 });
-  drawText(page, "15 seg", cx - 5, diagramsY - 26, { font, size: 8, color: GRAY });
-  cx += sideW + gap + 15;
+  drawPhoneLeftSide(page, font, {
+    x: colCenters[2] - sideW / 2,
+    y: diagBottom,
+    w: sideW,
+    h: phoneH,
+  });
+  centerLabel(page, "3. Esquerda", colCenters[2], labelY, bold, 9);
+  centerLabel(page, "15 seg", colCenters[2], subLabelY, font, 8, GRAY);
 
   // 4. Right side
-  drawPhoneRightSide(page, font, { x: cx, y: diagramsY, w: sideW, h: phoneH });
-  drawText(page, "4. Direita", cx - 5, diagramsY - 14, { font: bold, size: 9 });
-  drawText(page, "15 seg", cx - 5, diagramsY - 26, { font, size: 8, color: GRAY });
-  cx += sideW + gap + 15;
+  drawPhoneRightSide(page, font, {
+    x: colCenters[3] - sideW / 2,
+    y: diagBottom,
+    w: sideW,
+    h: phoneH,
+  });
+  centerLabel(page, "4. Direita", colCenters[3], labelY, bold, 9);
+  centerLabel(page, "15 seg", colCenters[3], subLabelY, font, 8, GRAY);
 
-  // 5. Base
-  drawPhoneBase(page, font, { x: cx, y: diagramsY + 50, w: baseW, h: baseH });
-  drawText(page, "5. Base", cx, diagramsY - 14, { font: bold, size: 9 });
-  drawText(page, "10 seg", cx, diagramsY - 26, { font, size: 8, color: GRAY });
+  // 5. Base — horizontal, centered vertically
+  drawPhoneBase(page, font, {
+    x: colCenters[4] - baseW / 2,
+    y: diagBottom + (phoneH - baseH) / 2,
+    w: baseW,
+    h: baseH,
+  });
+  centerLabel(page, "5. Base", colCenters[4], labelY, bold, 9);
+  centerLabel(page, "10 seg", colCenters[4], subLabelY, font, 8, GRAY);
 
   // Detailed instructions
-  let yy = diagramsY - 55;
+  let yy = subLabelY - 25;
   drawDivider(page, yy);
-  yy -= 25;
+  yy -= 22;
 
   const sections = [
     {
-      t: "1. Frente — 15s",
+      t: "1. Frente - 15s",
       b: "Tela ligada e desligada. Aproxime nas bordas e cantos para mostrar trincas, lascas ou levantamento. Mostre a Dynamic Island / notch e a câmera frontal.",
     },
     {
-      t: "2. Verso — 20s",
+      t: "2. Verso - 20s",
       b: "Mostre toda a traseira com luz incidindo de lado para revelar riscos. Aproxime no módulo de câmeras (cada lente), no flash, no LiDAR e na região do MagSafe.",
     },
     {
-      t: "3. Lateral esquerda — 15s",
+      t: "3. Lateral esquerda - 15s",
       b: "Mostre o Action Button (ou switch mute), volume + e volume -. Pressione cada um. Mostre a bandeja do SIM.",
     },
     {
-      t: "4. Lateral direita — 15s",
+      t: "4. Lateral direita - 15s",
       b: "Mostre o botão lateral (power) e o Camera Control (se houver). Pressione cada um.",
     },
     {
-      t: "5. Base — 10s",
-      b: "Mostre o conector USB-C/Lightning, alto-falantes e microfones. Confirme que não há resíduos no conector.",
+      t: "5. Base - 10s",
+      b: "Mostre o conector USB-C / Lightning, alto-falantes e microfones. Confirme que não há resíduos no conector.",
     },
     {
-      t: "Por último — IMEI",
+      t: "Por último - IMEI",
       b: "Vá em Ajustes -> Geral -> Sobre e role até IMEI. Filme a tela mostrando o IMEI por uns 5 segundos.",
     },
   ];
 
   for (const s of sections) {
     drawText(page, "•", MARGIN, yy, { font: bold, size: 11, color: accent });
-    drawText(page, s.t, MARGIN + 10, yy, { font: bold, size: 9.5 });
-    yy = drawWrapped(page, s.b, MARGIN + 10, yy - 12, font, 9, PW - MARGIN * 2 - 10, GRAY);
-    yy -= 8;
+    drawText(page, s.t, MARGIN + 12, yy, { font: bold, size: 9.5 });
+    yy = drawWrapped(page, s.b, MARGIN + 12, yy - 12, font, 9, PW - MARGIN * 2 - 12, GRAY);
+    yy -= 6;
   }
+}
+
+function centerLabel(
+  page: PDFPage,
+  text: string,
+  cx: number,
+  y: number,
+  font: PDFFont,
+  size: number,
+  color: RGB = BLACK,
+) {
+  const tw = font.widthOfTextAtSize(text, size);
+  page.drawText(text, { x: cx - tw / 2, y, size, font, color });
 }
 
 function pageButtonsDiagram(ctx: Ctx) {
