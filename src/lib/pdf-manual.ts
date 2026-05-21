@@ -865,11 +865,11 @@ function pageAesthetic(ctx: Ctx) {
       borderWidth: 0.5,
       color: WHITE,
     });
-    // diagram
+    // diagram — d.y = bottom-left of phone box
     const dx = MARGIN + 20;
     const dy =
       f.label === "Base"
-        ? yy - cardH / 2 - f.h / 2 + 5
+        ? yy - cardH / 2 - f.h / 2
         : yy - cardH + (cardH - f.h) / 2;
     f.draw(page, font, { x: dx, y: dy, w: f.w, h: f.h });
 
