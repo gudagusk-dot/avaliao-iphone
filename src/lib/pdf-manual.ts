@@ -710,7 +710,7 @@ function pageVideoScript(ctx: Ctx) {
     },
     {
       t: "2. Verso - 20s",
-      b: "Mostre toda a traseira com luz incidindo de lado para revelar riscos. Aproxime no módulo de câmeras (cada lente), no flash, no LiDAR e na região do MagSafe.",
+      b: "Mostre toda a traseira com luz incidindo de lado para revelar riscos. Aproxime no módulo de câmeras (cada lente), no flash e na região do MagSafe.",
     },
     {
       t: "3. Lateral esquerda - 15s",
