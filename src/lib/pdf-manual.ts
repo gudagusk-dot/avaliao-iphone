@@ -679,7 +679,7 @@ function pageVideoScript(ctx: Ctx) {
     },
     {
       t: "3. Lateral esquerda — 15s",
-      b: "Mostre o Action Button (ou switch mute), volume + e volume −. Pressione cada um. Mostre a bandeja do SIM.",
+      b: "Mostre o Action Button (ou switch mute), volume + e volume -. Pressione cada um. Mostre a bandeja do SIM.",
     },
     {
       t: "4. Lateral direita — 15s",
