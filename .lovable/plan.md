@@ -1,73 +1,48 @@
+## Diagnóstico dos bugs nos diagramas
 
-# Mini-site gerador do Manual de Avaliação de iPhone
+Olhei o arquivo `src/lib/pdf-manual.ts` (funções `drawPhoneLeftSide`, `drawPhoneRightSide`, `drawPhoneBack`) e identifiquei a causa exata do "bloco preto" e dos elementos saindo do quadrado.
 
-Site de página única no Lovable onde a loja:
-1. Faz upload do logo (PNG/JPG/SVG)
-2. Digita nome da loja (e opcionalmente Instagram/telefone — desativável)
-3. Pré-visualiza o manual
-4. Baixa o PDF personalizado
+### Causa 1 — Botões laterais viram um bloco preto sólido
 
-Sem backend, sem login. PDF gerado no navegador com `pdf-lib`.
+Nas laterais esquerda e direita, os botões são desenhados como retângulos pretos grandes que **se sobrepõem** porque as posições foram pensadas para um phone alto (página de gravação) mas reaproveitadas no checklist com altura menor. Exemplos:
 
-## Conteúdo do PDF (revisado conforme pedido)
+- Lateral esquerda: Action Button (h=10) em `y+0.78h`, Volume+ (h=20) em `y+0.62h`, Volume− (h=20) em `y+0.50h`. Os topos passam por cima dos próximos botões e os três viram uma única barra preta.
+- Lateral direita: Power (h=32) em `y+0.68h` + Camera Control (h=14) em `y+0.45h` — quase metade da lateral fica preta sólida.
 
-Estrutura enxuta — somente avaliação, sem nada de envio:
+Além disso, os botões usam `x - 2.5` com `width: w + 5`, o que faz a barra preta **sair do retângulo do card** do checklist (extrapola para a esquerda/direita).
 
-1. **Capa** — logo da loja + nome + título "Manual de Avaliação de iPhone" + campos cliente/IMEI/data/modelo
-2. **Como usar** — 2 passos: (1) gravar o vídeo seguindo o roteiro, (2) rodar o app JCID Doctor e tirar print do relatório
-3. **Página única "Como gravar o vídeo"** (nova, conforme pedido) — diagramas fiéis do iPhone (frente, verso, lateral esquerda, lateral direita, base) lado a lado com setas e legendas indicando exatamente o que mostrar e por quanto tempo. Roteiro cronometrado integrado na mesma página.
-4. **Checklist estético externo** — uma seção compacta por face do aparelho (frente, verso, laterais, base) com checkboxes (OK / risco leve / risco profundo / amassado / trinca / observação) ao lado de cada diagrama
-5. **Diagrama de botões físicos** — ilustração fiel ao iPhone (com Action Button, Camera Control, volume, power, bandeja SIM) com setas e instrução de teste de cada botão
-6. **Testes funcionais com JCID Doctor** — link App Store, passo a passo, o que verificar (bateria, Face ID, câmeras, sensores, originalidade de peças), pedir print do relatório
-7. **Desativar o Buscar (Find My iPhone)** — único passo de preparação mantido, pois sem isso a avaliação não é confiável. Aviso: avaliação não pode ser feita com Buscar ativado.
+### Causa 2 — Traseira com 3 câmeras
 
-**Removido conforme pedido:**
-- Roteiro de vídeo isolado (vira página única integrada com diagramas)
-- Checklist estético antigo espalhado em várias páginas
-- Página de testes visuais da tela (JCID cobre)
-- Backup, sair do iCloud, desemparelhar Watch, remover SIM/eSIM, apagar conteúdo, confirmar Bloqueio de Ativação
-- Checklist final com assinatura de envio
-- Página "Obrigado pela confiança / 24h úteis / contato e envio"
+A função `drawPhoneBack` desenha o módulo quadrado do iPhone 15/16 Pro (3 lentes + LiDAR + flash). Você quer o **iPhone 17 padrão**: barra de câmera horizontal em pílula com 2 lentes.
 
-## Diagramas fiéis ao iPhone
+---
 
-Refazer os SVGs com proporções reais (iPhone 15/16 Pro como referência):
-- Corpo com cantos arredondados corretos, Dynamic Island na posição certa
-- Módulo de câmera traseiro quadrado com 3 lentes + LiDAR + flash no layout real
-- Action Button (lateral esquerda, acima do volume) e Camera Control (lateral direita, abaixo do power)
-- Bandeja SIM na posição correta (lateral esquerda, abaixo dos botões)
-- USB-C centralizado entre grades de alto-falante e microfones na base
-- Linhas finas pretas, callouts cinza, mesma linguagem visual da página de suporte da Apple
+## O que vou alterar (só `src/lib/pdf-manual.ts`)
 
-SVGs ficam em `src/assets/iphone-*.svg` e são embutidos no PDF como vetor via `pdf-lib` (mantendo nitidez em qualquer zoom).
+### 1. Redesenhar a traseira (estilo iPhone 17)
 
-## Arquitetura técnica
+- Remover o bump quadrado, LiDAR e a 3ª lente.
+- Desenhar uma **barra horizontal em pílula** no topo do verso (largura ~58% do corpo, altura ~16%), cantos totalmente arredondados.
+- Dentro da pílula: **2 lentes circulares** lado a lado + um pequeno flash discreto à direita (pontinho cinza claro).
+- Manter MagSafe e logo da Apple no centro.
 
-- TanStack Start, página única em `src/routes/index.tsx`
-- Componentes:
-  - `LogoUploader` (FileReader → dataURL, valida tipo/tamanho)
-  - `BrandingForm` (nome da loja, instagram opcional, cor de destaque opcional com default `#007AFF`)
-  - `ManualPreview` (preview HTML da capa + miniatura dos diagramas)
-  - `DownloadButton` (gera PDF e dispara download)
-- Geração de PDF: `pdf-lib` (puro JS, roda no browser, sem servidor). Embute o logo (PNG/JPG) e desenha SVGs como paths vetoriais. Texto em Helvetica (built-in do PDF).
-- Estado em React local; nada persistido em servidor. Opcional: `localStorage` para lembrar branding entre sessões.
-- Sem Lovable Cloud, sem auth, sem banco.
+### 2. Redesenhar os botões das laterais (sem sobreposição, dentro do card)
 
-## Design do site
+- **Lateral esquerda**: Action Button pequeno (h≈6), espaço, Volume+ (h≈12), gap nítido, Volume− (h≈12). Posições em proporções que não se tocam mesmo com `h=110`.
+- **Lateral direita**: Power (h≈18) no topo, gap, Camera Control (h≈8) na metade inferior — sem sobrepor.
+- **Botões deixam de protruir para fora**: usar `x - 1.2` e `width: w + 2.4` (suficiente para indicar volume, sem invadir o card).
+- Bandeja do SIM: tracinho fino mais discreto, claramente abaixo dos botões.
 
-- Estética Apple-like: fundo claro, tipografia limpa (Inter/SF-like), accent `#007AFF`
-- Layout split: form à esquerda, preview do PDF à direita (em desktop)
-- Mobile: form em cima, preview embaixo, botão de download fixo
-- Tokens em `src/styles.css` (oklch)
+### 3. QA
 
-## Entregáveis
+Após a alteração eu vou:
 
-1. Site publicável com gerador funcional
-2. Botão extra "Baixar versão sem logo" para você usar como fallback
-3. PDF final fica em ~6–7 páginas (em vez de 12), focado só em avaliação
+1. Gerar um PDF de amostra com `bun` rodando o gerador.
+2. Converter cada página para imagem com `pdftoppm`.
+3. Inspecionar visualmente a página "Como gravar o vídeo" e cada card do "Checklist estético externo" para confirmar:
+   - Nenhum bloco preto sólido.
+   - Botões dentro do card.
+   - Traseira com 2 lentes no formato pílula horizontal.
+4. Iterar até estar limpo.
 
-## QA
-
-- Gerar PDF de teste no preview, abrir e conferir cada página (logo posicionado, diagramas nítidos, nada cortado, checkboxes alinhados)
-- Testar com logo PNG transparente, JPG e SVG
-- Testar com nome de loja curto e longo
+Nada na UI do site muda — só o desenho dentro do PDF.

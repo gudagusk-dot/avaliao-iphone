@@ -253,53 +253,49 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   );
 }
 
-// iPhone BACK — y = bottom-left
+// iPhone BACK — iPhone 17 style: horizontal pill camera bar with 2 lenses
 function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
-  // Camera bump — top-left quadrant
-  const bumpW = w * 0.42;
-  const bumpX = x + w * 0.08;
-  const bumpY = y + h - w * 0.08 - bumpW; // top-aligned
-  roundedRect(page, bumpX, bumpY, bumpW, bumpW, bumpW * 0.22, {
+
+  // Horizontal camera pill near top-left
+  const pillW = w * 0.6;
+  const pillH = w * 0.22;
+  const pillX = x + w * 0.09;
+  const pillY = y + h - w * 0.1 - pillH;
+  roundedRect(page, pillX, pillY, pillW, pillH, pillH / 2, {
     stroke: BLACK,
     thickness: 0.8,
     fill: SUBTLE,
   });
-  // 3 lenses (top-left, top-right, bottom-left)
-  const lensR = bumpW * 0.16;
-  const lensPositions: Array<[number, number]> = [
-    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.72], // top-left
-    [bumpX + bumpW * 0.72, bumpY + bumpW * 0.72], // top-right
-    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.28], // bottom-left
-  ];
-  for (const [cx, cy] of lensPositions) {
+
+  // 2 lenses side by side (left side of pill)
+  const lensR = pillH * 0.32;
+  const lensY = pillY + pillH / 2;
+  const lensX1 = pillX + pillH * 0.55;
+  const lensX2 = lensX1 + lensR * 2.4;
+  for (const lx of [lensX1, lensX2]) {
     page.drawCircle({
-      x: cx,
-      y: cy,
+      x: lx,
+      y: lensY,
       size: lensR,
       borderColor: BLACK,
       borderWidth: 0.6,
       color: WHITE,
     });
-    page.drawCircle({ x: cx, y: cy, size: lensR * 0.5, color: BLACK });
+    page.drawCircle({ x: lx, y: lensY, size: lensR * 0.5, color: BLACK });
   }
-  // LiDAR (bottom-right of bump)
+
+  // Flash on right end of pill
   page.drawCircle({
-    x: bumpX + bumpW * 0.72,
-    y: bumpY + bumpW * 0.28,
-    size: lensR * 0.55,
-    color: GRAY,
-  });
-  // Flash (middle-right of bump)
-  page.drawCircle({
-    x: bumpX + bumpW * 0.72,
-    y: bumpY + bumpW * 0.5,
-    size: lensR * 0.4,
+    x: pillX + pillW - pillH * 0.5,
+    y: lensY,
+    size: lensR * 0.45,
     color: LIGHT,
     borderColor: GRAY,
     borderWidth: 0.4,
   });
+
   // MagSafe ring (center)
   page.drawCircle({
     x: x + w / 2,
@@ -319,61 +315,65 @@ function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   });
 }
 
-// LEFT side — y = bottom-left. Top of phone: Action Button, then Volume +/-, then SIM tray near middle.
+// LEFT side — y = bottom-left. Action, Volume+, Volume-, SIM tray.
 function drawPhoneLeftSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
-  // Action button (near top)
+  const bx = x - 1.2;
+  const bw = w + 2.4;
+  // Action button (small, near top)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.78,
-    width: w + 5,
-    height: 10,
+    x: bx,
+    y: y + h * 0.82,
+    width: bw,
+    height: h * 0.05,
     color: BLACK,
   });
-  // Volume up
+  // Volume + (gap below action)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.62,
-    width: w + 5,
-    height: 20,
+    x: bx,
+    y: y + h * 0.68,
+    width: bw,
+    height: h * 0.09,
     color: BLACK,
   });
-  // Volume down
+  // Volume - (clear gap below volume+)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.5,
-    width: w + 5,
-    height: 20,
+    x: bx,
+    y: y + h * 0.54,
+    width: bw,
+    height: h * 0.09,
     color: BLACK,
   });
-  // SIM tray slot (lower portion)
+  // SIM tray slot (thin line lower portion)
   page.drawLine({
-    start: { x: x, y: y + h * 0.3 },
-    end: { x: x + w, y: y + h * 0.3 },
-    thickness: 0.6,
+    start: { x: x + w * 0.1, y: y + h * 0.28 },
+    end: { x: x + w * 0.9, y: y + h * 0.28 },
+    thickness: 0.5,
     color: GRAY,
   });
 }
 
-// RIGHT side
+// RIGHT side — Power (top), Camera Control (lower).
 function drawPhoneRightSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
+  const bx = x - 1.2;
+  const bw = w + 2.4;
   // Power
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.68,
-    width: w + 5,
-    height: 32,
+    x: bx,
+    y: y + h * 0.7,
+    width: bw,
+    height: h * 0.15,
     color: BLACK,
   });
-  // Camera Control
+  // Camera Control (lower, lighter color for distinction)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.45,
-    width: w + 5,
-    height: 14,
+    x: bx,
+    y: y + h * 0.48,
+    width: bw,
+    height: h * 0.07,
     color: GRAY,
   });
 }
@@ -710,7 +710,7 @@ function pageVideoScript(ctx: Ctx) {
     },
     {
       t: "2. Verso - 20s",
-      b: "Mostre toda a traseira com luz incidindo de lado para revelar riscos. Aproxime no módulo de câmeras (cada lente), no flash, no LiDAR e na região do MagSafe.",
+      b: "Mostre toda a traseira com luz incidindo de lado para revelar riscos. Aproxime no módulo de câmeras (cada lente), no flash e na região do MagSafe.",
     },
     {
       t: "3. Lateral esquerda - 15s",
@@ -843,11 +843,11 @@ function pageAesthetic(ctx: Ctx) {
     w: number;
     h: number;
   }> = [
-    { label: "Frente", draw: drawPhoneFront, w: 55, h: 110 },
-    { label: "Verso", draw: drawPhoneBack, w: 55, h: 110 },
-    { label: "Lateral esquerda", draw: drawPhoneLeftSide, w: 14, h: 110 },
-    { label: "Lateral direita", draw: drawPhoneRightSide, w: 14, h: 110 },
-    { label: "Base", draw: drawPhoneBase, w: 55, h: 16 },
+    { label: "Frente", draw: drawPhoneFront, w: 40, h: 80 },
+    { label: "Verso", draw: drawPhoneBack, w: 40, h: 80 },
+    { label: "Lateral esquerda", draw: drawPhoneLeftSide, w: 10, h: 80 },
+    { label: "Lateral direita", draw: drawPhoneRightSide, w: 10, h: 80 },
+    { label: "Base", draw: drawPhoneBase, w: 50, h: 14 },
   ];
 
   const states = ["OK", "Risco leve", "Risco profundo", "Amassado", "Trinca"];
