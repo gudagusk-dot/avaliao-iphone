@@ -321,30 +321,19 @@ function drawPhoneLeftSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
   const bx = x - 1.2;
   const bw = w + 2.4;
+  // Button drawn as thin outlined rounded pill (stroke only, white fill)
+  const btn = (by: number, bh: number, fill = WHITE) =>
+    roundedRect(page, bx, by, bw, bh, Math.min(bw, bh) / 2, {
+      stroke: BLACK,
+      thickness: 0.7,
+      fill,
+    });
   // Action button (small, near top)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.82,
-    width: bw,
-    height: h * 0.05,
-    color: BLACK,
-  });
-  // Volume + (gap below action)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.68,
-    width: bw,
-    height: h * 0.09,
-    color: BLACK,
-  });
-  // Volume - (clear gap below volume+)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.54,
-    width: bw,
-    height: h * 0.09,
-    color: BLACK,
-  });
+  btn(y + h * 0.82, h * 0.05);
+  // Volume +
+  btn(y + h * 0.68, h * 0.09);
+  // Volume -
+  btn(y + h * 0.54, h * 0.09);
   // SIM tray slot (thin line lower portion)
   page.drawLine({
     start: { x: x + w * 0.1, y: y + h * 0.28 },
@@ -360,22 +349,16 @@ function drawPhoneRightSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
   const bx = x - 1.2;
   const bw = w + 2.4;
+  const btn = (by: number, bh: number, fill = WHITE) =>
+    roundedRect(page, bx, by, bw, bh, Math.min(bw, bh) / 2, {
+      stroke: BLACK,
+      thickness: 0.7,
+      fill,
+    });
   // Power
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.7,
-    width: bw,
-    height: h * 0.15,
-    color: BLACK,
-  });
-  // Camera Control (lower, lighter color for distinction)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.48,
-    width: bw,
-    height: h * 0.07,
-    color: GRAY,
-  });
+  btn(y + h * 0.7, h * 0.15);
+  // Camera Control (lower)
+  btn(y + h * 0.48, h * 0.07, SUBTLE);
 }
 
 // BASE — y = bottom-left. Horizontal bar.
