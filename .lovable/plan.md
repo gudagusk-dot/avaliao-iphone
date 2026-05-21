@@ -1,52 +1,73 @@
-# Manual de Inspeção de iPhone — PDF com diagramas estilo Apple
 
-PDF profissional em português gerado com ReportLab, com **diagramas ilustrativos do iPhone** semelhantes aos da página de referência da Apple (support.apple.com/101944), indicando botões físicos, lentes, conectores e áreas a inspecionar.
+# Mini-site gerador do Manual de Avaliação de iPhone
 
-Output: `/mnt/documents/manual-inspecao-iphone.pdf`
+Site de página única no Lovable onde a loja:
+1. Faz upload do logo (PNG/JPG/SVG)
+2. Digita nome da loja (e opcionalmente Instagram/telefone — desativável)
+3. Pré-visualiza o manual
+4. Baixa o PDF personalizado
 
-## Diagramas a incluir
-Ilustrações vetoriais do iPhone desenhadas diretamente no PDF via ReportLab, com **linhas de chamada (callouts) e rótulos** no estilo Apple:
+Sem backend, sem login. PDF gerado no navegador com `pdf-lib`.
 
-1. **Vista frontal** — Dynamic Island/notch, câmera frontal, tela, alto-falante superior
-2. **Vista traseira** — módulo de câmeras (cada lente rotulada: principal, ultra-wide, tele, LiDAR, flash), logo Apple, MagSafe
-3. **Lateral esquerda** — switch mute / Action Button, volume up, volume down, bandeja SIM
-4. **Lateral direita** — botão lateral (power), Camera Control (15/16 Pro)
-5. **Base** — conector USB-C/Lightning, alto-falantes, microfones
-6. **Diagrama de botões físicos** — setas indicando "pressione e segure", "pressione uma vez", estilo Apple
+## Conteúdo do PDF (revisado conforme pedido)
 
-Cada diagrama acompanha uma checklist do que verificar.
+Estrutura enxuta — somente avaliação, sem nada de envio:
 
-## Estrutura completa do PDF (~12 páginas)
+1. **Capa** — logo da loja + nome + título "Manual de Avaliação de iPhone" + campos cliente/IMEI/data/modelo
+2. **Como usar** — 2 passos: (1) gravar o vídeo seguindo o roteiro, (2) rodar o app JCID Doctor e tirar print do relatório
+3. **Página única "Como gravar o vídeo"** (nova, conforme pedido) — diagramas fiéis do iPhone (frente, verso, lateral esquerda, lateral direita, base) lado a lado com setas e legendas indicando exatamente o que mostrar e por quanto tempo. Roteiro cronometrado integrado na mesma página.
+4. **Checklist estético externo** — uma seção compacta por face do aparelho (frente, verso, laterais, base) com checkboxes (OK / risco leve / risco profundo / amassado / trinca / observação) ao lado de cada diagrama
+5. **Diagrama de botões físicos** — ilustração fiel ao iPhone (com Action Button, Camera Control, volume, power, bandeja SIM) com setas e instrução de teste de cada botão
+6. **Testes funcionais com JCID Doctor** — link App Store, passo a passo, o que verificar (bateria, Face ID, câmeras, sensores, originalidade de peças), pedir print do relatório
+7. **Desativar o Buscar (Find My iPhone)** — único passo de preparação mantido, pois sem isso a avaliação não é confiável. Aviso: avaliação não pode ser feita com Buscar ativado.
 
-1. **Capa** — placeholder editável para logo + título + campos cliente/IMEI/data
-2. **Como usar** — fluxo de 3 passos (vídeo → app JCID → checklist final)
-3. **Roteiro de vídeo cronometrado** (2–3 min, cena por cena com tempo sugerido)
-4. **Checklist estético externo** — uma página por face do aparelho, cada uma com **diagrama do iPhone** + checklist (OK / risco leve / risco profundo / amassado / trinca / observação)
-5. **Testes de tela visuais** — pixels mortos, burn-in, linhas, touch, True Tone, brilho automático (instruções de fundo sólido)
-6. **Diagrama de botões físicos** — ilustração estilo Apple mostrando cada botão com seta + instrução de teste (pressionar, segurar, liga/desliga, screenshot, modo silencioso, Action Button)
-7. **Testes funcionais com JCID Doctor** — recomendação do app (link App Store), passo a passo de instalação e execução, o que verificar no relatório completo (bateria, Face ID, câmeras, sensores, conectores, originalidade de peças), pedir print do relatório
+**Removido conforme pedido:**
+- Roteiro de vídeo isolado (vira página única integrada com diagramas)
+- Checklist estético antigo espalhado em várias páginas
+- Página de testes visuais da tela (JCID cobre)
+- Backup, sair do iCloud, desemparelhar Watch, remover SIM/eSIM, apagar conteúdo, confirmar Bloqueio de Ativação
+- Checklist final com assinatura de envio
+- Página "Obrigado pela confiança / 24h úteis / contato e envio"
 
-   *(Removido o bloco de testes manuais — o JCID cobre Face ID, câmeras, áudio, conectividade, sensores, vibração e carregamento.)*
+## Diagramas fiéis ao iPhone
 
-8. **Preparação para envio — resetar o iPhone** (NOVO)
-   Passo a passo ilustrado para o cliente remover a conta e zerar o aparelho antes de enviar:
-   - **Fazer backup** (iCloud ou computador) — instruções rápidas
-   - **Desativar o Buscar (Find My iPhone)**: Ajustes → [seu nome] → Buscar → Buscar iPhone → desativar (vai pedir senha do Apple ID)
-   - **Sair do iCloud / Apple ID**: Ajustes → [seu nome] → role até o final → Sair → digitar senha do Apple ID → confirmar
-   - **Desemparelhar Apple Watch** (se houver)
-   - **Remover cartão SIM / eSIM**
-   - **Apagar conteúdo e configurações**: Ajustes → Geral → Transferir ou Redefinir iPhone → Apagar Conteúdo e Configurações → seguir até a tela "Olá"
-   - **Confirmar Bloqueio de Ativação removido**: ao final, o iPhone deve iniciar na tela inicial de configuração, sem pedir Apple ID anterior
-   - Aviso destacado: **iPhone com Buscar ativado ou Apple ID logado NÃO pode ser avaliado/comprado**
+Refazer os SVGs com proporções reais (iPhone 15/16 Pro como referência):
+- Corpo com cantos arredondados corretos, Dynamic Island na posição certa
+- Módulo de câmera traseiro quadrado com 3 lentes + LiDAR + flash no layout real
+- Action Button (lateral esquerda, acima do volume) e Camera Control (lateral direita, abaixo do power)
+- Bandeja SIM na posição correta (lateral esquerda, abaixo dos botões)
+- USB-C centralizado entre grades de alto-falante e microfones na base
+- Linhas finas pretas, callouts cinza, mesma linguagem visual da página de suporte da Apple
 
-9. **Checklist final + assinatura** — resumo, observações gerais, assinatura/data
+SVGs ficam em `src/assets/iphone-*.svg` e são embutidos no PDF como vetor via `pdf-lib` (mantendo nitidez em qualquer zoom).
 
-## Design
-- Helvetica + accent azul (#007AFF estilo Apple)
-- Diagramas em linha fina preta com callouts cinza
-- Cabeçalho com placeholder de logo em todas as páginas
-- Rodapé com numeração
-- Checkboxes desenhados (□) para preenchimento
+## Arquitetura técnica
+
+- TanStack Start, página única em `src/routes/index.tsx`
+- Componentes:
+  - `LogoUploader` (FileReader → dataURL, valida tipo/tamanho)
+  - `BrandingForm` (nome da loja, instagram opcional, cor de destaque opcional com default `#007AFF`)
+  - `ManualPreview` (preview HTML da capa + miniatura dos diagramas)
+  - `DownloadButton` (gera PDF e dispara download)
+- Geração de PDF: `pdf-lib` (puro JS, roda no browser, sem servidor). Embute o logo (PNG/JPG) e desenha SVGs como paths vetoriais. Texto em Helvetica (built-in do PDF).
+- Estado em React local; nada persistido em servidor. Opcional: `localStorage` para lembrar branding entre sessões.
+- Sem Lovable Cloud, sem auth, sem banco.
+
+## Design do site
+
+- Estética Apple-like: fundo claro, tipografia limpa (Inter/SF-like), accent `#007AFF`
+- Layout split: form à esquerda, preview do PDF à direita (em desktop)
+- Mobile: form em cima, preview embaixo, botão de download fixo
+- Tokens em `src/styles.css` (oklch)
+
+## Entregáveis
+
+1. Site publicável com gerador funcional
+2. Botão extra "Baixar versão sem logo" para você usar como fallback
+3. PDF final fica em ~6–7 páginas (em vez de 12), focado só em avaliação
 
 ## QA
-Após gerar, converter cada página em JPG (pdftoppm) e inspecionar visualmente: nada cortado, diagramas legíveis, rótulos sem sobreposição, espaçamento consistente.
+
+- Gerar PDF de teste no preview, abrir e conferir cada página (logo posicionado, diagramas nítidos, nada cortado, checkboxes alinhados)
+- Testar com logo PNG transparente, JPG e SVG
+- Testar com nome de loja curto e longo
