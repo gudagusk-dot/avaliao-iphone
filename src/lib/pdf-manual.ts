@@ -315,61 +315,65 @@ function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   });
 }
 
-// LEFT side — y = bottom-left. Top of phone: Action Button, then Volume +/-, then SIM tray near middle.
+// LEFT side — y = bottom-left. Action, Volume+, Volume-, SIM tray.
 function drawPhoneLeftSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
-  // Action button (near top)
+  const bx = x - 1.2;
+  const bw = w + 2.4;
+  // Action button (small, near top)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.78,
-    width: w + 5,
-    height: 10,
+    x: bx,
+    y: y + h * 0.82,
+    width: bw,
+    height: h * 0.05,
     color: BLACK,
   });
-  // Volume up
+  // Volume + (gap below action)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.62,
-    width: w + 5,
-    height: 20,
+    x: bx,
+    y: y + h * 0.68,
+    width: bw,
+    height: h * 0.09,
     color: BLACK,
   });
-  // Volume down
+  // Volume - (clear gap below volume+)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.5,
-    width: w + 5,
-    height: 20,
+    x: bx,
+    y: y + h * 0.54,
+    width: bw,
+    height: h * 0.09,
     color: BLACK,
   });
-  // SIM tray slot (lower portion)
+  // SIM tray slot (thin line lower portion)
   page.drawLine({
-    start: { x: x, y: y + h * 0.3 },
-    end: { x: x + w, y: y + h * 0.3 },
-    thickness: 0.6,
+    start: { x: x + w * 0.1, y: y + h * 0.28 },
+    end: { x: x + w * 0.9, y: y + h * 0.28 },
+    thickness: 0.5,
     color: GRAY,
   });
 }
 
-// RIGHT side
+// RIGHT side — Power (top), Camera Control (lower).
 function drawPhoneRightSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
+  const bx = x - 1.2;
+  const bw = w + 2.4;
   // Power
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.68,
-    width: w + 5,
-    height: 32,
+    x: bx,
+    y: y + h * 0.7,
+    width: bw,
+    height: h * 0.15,
     color: BLACK,
   });
-  // Camera Control
+  // Camera Control (lower, lighter color for distinction)
   page.drawRectangle({
-    x: x - 2.5,
-    y: y + h * 0.45,
-    width: w + 5,
-    height: 14,
+    x: bx,
+    y: y + h * 0.48,
+    width: bw,
+    height: h * 0.07,
     color: GRAY,
   });
 }
