@@ -691,7 +691,7 @@ function pageVideoScript(ctx: Ctx) {
     },
     {
       t: "Por último — IMEI",
-      b: "Vá em Ajustes → Geral → Sobre e role até IMEI. Filme a tela mostrando o IMEI por uns 5 segundos.",
+      b: "Vá em Ajustes -> Geral -> Sobre e role até IMEI. Filme a tela mostrando o IMEI por uns 5 segundos.",
     },
   ];
 
@@ -708,7 +708,7 @@ function pageButtonsDiagram(ctx: Ctx) {
   drawText(page, "Botões físicos", MARGIN, PH - 80, { font: bold, size: 22 });
   drawText(
     page,
-    "Teste cada botão durante a gravação do vídeo. Marque ✓ se estiver funcionando.",
+    "Teste cada botão durante a gravação do vídeo. Marque OK se estiver funcionando.",
     MARGIN,
     PH - 105,
     { font, size: 11, color: GRAY },
@@ -725,7 +725,7 @@ function pageButtonsDiagram(ctx: Ctx) {
   const leftBtns = [
     { y: py + phoneH * 0.78, label: "Action Button", desc: "Pressione e segure" },
     { y: py + phoneH * 0.65, label: "Volume +", desc: "Pressione 1x" },
-    { y: py + phoneH * 0.55, label: "Volume −", desc: "Pressione 1x" },
+    { y: py + phoneH * 0.55, label: "Volume -", desc: "Pressione 1x" },
   ];
   leftBtns.forEach((b) => {
     page.drawRectangle({ x: px - 4, y: b.y, width: 5, height: 8, color: BLACK });
@@ -764,7 +764,7 @@ function pageButtonsDiagram(ctx: Ctx) {
   const items = [
     "Action Button / switch mute alterna corretamente",
     "Volume + aumenta o volume",
-    "Volume − diminui o volume",
+    "Volume - diminui o volume",
     "Botão lateral liga/desliga a tela",
     "Botão lateral + Volume + tira screenshot",
     "Camera Control responde ao toque (modelos Pro)",
@@ -891,7 +891,7 @@ function pageJcid(ctx: Ctx) {
   yy -= 16;
   yy = drawWrapped(
     page,
-    "Abra o app, selecione “Teste completo” (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.",
+    "Abra o app, selecione "Teste completo" (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.",
     MARGIN,
     yy,
     font,
