@@ -200,6 +200,9 @@ interface PhoneDims {
   h: number;
 }
 
+// All diagram coords use NATIVE pdf-lib semantics: (x, y) = bottom-left, +y is up.
+// PhoneDims.y = bottom-left of phone bounding box.
+
 function roundedRect(
   page: PDFPage,
   x: number,
@@ -209,84 +212,91 @@ function roundedRect(
   r: number,
   opts: { stroke?: RGB; fill?: RGB; thickness?: number } = {},
 ) {
-  // pdf-lib supports rectangle with rounded corners via drawRectangle? No — use drawSvgPath.
-  const path = `M ${x + r} ${y}
-    L ${x + w - r} ${y}
-    Q ${x + w} ${y} ${x + w} ${y + r}
-    L ${x + w} ${y + h - r}
-    Q ${x + w} ${y + h} ${x + w - r} ${y + h}
-    L ${x + r} ${y + h}
-    Q ${x} ${y + h} ${x} ${y + h - r}
-    L ${x} ${y + r}
-    Q ${x} ${y} ${x + r} ${y}
+  // SVG path with y-down, then flip via {x:0, y:page.height}.
+  // Convert native (x, y=bottom) to SVG top-y = page.height - (y + h).
+  const ph = page.getHeight();
+  const sy = ph - (y + h); // SVG top y of the rect in flipped space
+  const path = `M ${x + r} ${sy}
+    L ${x + w - r} ${sy}
+    Q ${x + w} ${sy} ${x + w} ${sy + r}
+    L ${x + w} ${sy + h - r}
+    Q ${x + w} ${sy + h} ${x + w - r} ${sy + h}
+    L ${x + r} ${sy + h}
+    Q ${x} ${sy + h} ${x} ${sy + h - r}
+    L ${x} ${sy + r}
+    Q ${x} ${sy} ${x + r} ${sy}
     Z`;
   page.drawSvgPath(path, {
     x: 0,
-    y: page.getHeight(),
+    y: ph,
     borderColor: opts.stroke ?? BLACK,
     borderWidth: opts.thickness ?? 0.8,
     color: opts.fill,
   });
 }
 
-// iPhone front
-function drawPhoneFront(page: PDFPage, font: PDFFont, d: PhoneDims) {
+// iPhone FRONT — y = bottom-left
+function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  // outer body
   roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
-  // screen inset
   const inset = w * 0.04;
   roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.1, {
     stroke: LIGHT,
     thickness: 0.5,
   });
-  // Dynamic Island
+  // Dynamic Island near top
   const diW = w * 0.36;
   const diH = w * 0.085;
-  roundedRect(page, x + (w - diW) / 2, y + inset + w * 0.04, diW, diH, diH / 2, {
-    fill: BLACK,
-    stroke: BLACK,
-    thickness: 0.3,
-  });
+  roundedRect(
+    page,
+    x + (w - diW) / 2,
+    y + h - inset - diH - w * 0.04,
+    diW,
+    diH,
+    diH / 2,
+    { fill: BLACK, stroke: BLACK, thickness: 0.3 },
+  );
 }
 
-// iPhone back (Pro layout: square camera bump, 3 lenses + LiDAR + flash)
-function drawPhoneBack(page: PDFPage, font: PDFFont, d: PhoneDims) {
+// iPhone BACK — y = bottom-left
+function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
-  // camera bump (top-left quadrant)
+  // Camera bump — top-left quadrant
   const bumpW = w * 0.42;
-  const bumpX = x + w * 0.06;
-  const bumpY = y + w * 0.06;
+  const bumpX = x + w * 0.08;
+  const bumpY = y + h - w * 0.08 - bumpW; // top-aligned
   roundedRect(page, bumpX, bumpY, bumpW, bumpW, bumpW * 0.22, {
     stroke: BLACK,
     thickness: 0.8,
     fill: SUBTLE,
   });
-  // 3 lenses in triangle
+  // 3 lenses (top-left, top-right, bottom-left)
   const lensR = bumpW * 0.16;
-  const cx1 = bumpX + bumpW * 0.28;
-  const cy1 = bumpY + bumpW * 0.28;
-  const cx2 = bumpX + bumpW * 0.72;
-  const cy2 = bumpY + bumpW * 0.28;
-  const cx3 = bumpX + bumpW * 0.28;
-  const cy3 = bumpY + bumpW * 0.72;
-  for (const [cx, cy] of [
-    [cx1, cy1],
-    [cx2, cy2],
-    [cx3, cy3],
-  ]) {
-    page.drawCircle({ x: cx, y: cy, size: lensR, borderColor: BLACK, borderWidth: 0.6, color: WHITE });
+  const lensPositions: Array<[number, number]> = [
+    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.72], // top-left
+    [bumpX + bumpW * 0.72, bumpY + bumpW * 0.72], // top-right
+    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.28], // bottom-left
+  ];
+  for (const [cx, cy] of lensPositions) {
+    page.drawCircle({
+      x: cx,
+      y: cy,
+      size: lensR,
+      borderColor: BLACK,
+      borderWidth: 0.6,
+      color: WHITE,
+    });
     page.drawCircle({ x: cx, y: cy, size: lensR * 0.5, color: BLACK });
   }
   // LiDAR (bottom-right of bump)
   page.drawCircle({
     x: bumpX + bumpW * 0.72,
-    y: bumpY + bumpW * 0.72,
+    y: bumpY + bumpW * 0.28,
     size: lensR * 0.55,
     color: GRAY,
   });
-  // Flash (between)
+  // Flash (middle-right of bump)
   page.drawCircle({
     x: bumpX + bumpW * 0.72,
     y: bumpY + bumpW * 0.5,
@@ -295,109 +305,120 @@ function drawPhoneBack(page: PDFPage, font: PDFFont, d: PhoneDims) {
     borderColor: GRAY,
     borderWidth: 0.4,
   });
-  // Apple logo (small circle placeholder in center)
+  // MagSafe ring (center)
   page.drawCircle({
     x: x + w / 2,
-    y: y + h * 0.55,
+    y: y + h * 0.4,
+    size: w * 0.18,
+    borderColor: LIGHT,
+    borderWidth: 0.4,
+  });
+  // Apple logo placeholder
+  page.drawCircle({
+    x: x + w / 2,
+    y: y + h * 0.4,
     size: w * 0.05,
     color: SUBTLE,
     borderColor: LIGHT,
     borderWidth: 0.4,
   });
-  // MagSafe ring
-  page.drawCircle({
-    x: x + w / 2,
-    y: y + h * 0.55,
-    size: w * 0.18,
-    borderColor: LIGHT,
-    borderWidth: 0.4,
-  });
 }
 
-// Side view — left side (Action Button area)
-function drawPhoneLeftSide(page: PDFPage, font: PDFFont, d: PhoneDims) {
+// LEFT side — y = bottom-left. Top of phone: Action Button, then Volume +/-, then SIM tray near middle.
+function drawPhoneLeftSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  // thin tall rectangle
-  roundedRect(page, x, y, w, h, w * 0.4, { stroke: BLACK, thickness: 1 });
-  // Action button (top)
+  roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
+  // Action button (near top)
   page.drawRectangle({
-    x: x - 2,
+    x: x - 2.5,
     y: y + h * 0.78,
-    width: w + 4,
-    height: 12,
+    width: w + 5,
+    height: 10,
     color: BLACK,
   });
   // Volume up
   page.drawRectangle({
-    x: x - 2,
+    x: x - 2.5,
     y: y + h * 0.62,
-    width: w + 4,
-    height: 22,
+    width: w + 5,
+    height: 20,
     color: BLACK,
   });
   // Volume down
   page.drawRectangle({
-    x: x - 2,
+    x: x - 2.5,
     y: y + h * 0.5,
-    width: w + 4,
-    height: 22,
+    width: w + 5,
+    height: 20,
     color: BLACK,
   });
-  // SIM tray slot
-  page.drawRectangle({
-    x: x,
-    y: y + h * 0.3,
-    width: w,
-    height: 1.5,
+  // SIM tray slot (lower portion)
+  page.drawLine({
+    start: { x: x, y: y + h * 0.3 },
+    end: { x: x + w, y: y + h * 0.3 },
+    thickness: 0.6,
     color: GRAY,
   });
 }
 
-// Side view — right side (power + Camera Control)
-function drawPhoneRightSide(page: PDFPage, font: PDFFont, d: PhoneDims) {
+// RIGHT side
+function drawPhoneRightSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  roundedRect(page, x, y, w, h, w * 0.4, { stroke: BLACK, thickness: 1 });
-  // Side / power
+  roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
+  // Power
   page.drawRectangle({
-    x: x - 2,
+    x: x - 2.5,
     y: y + h * 0.68,
-    width: w + 4,
-    height: 36,
+    width: w + 5,
+    height: 32,
     color: BLACK,
   });
   // Camera Control
   page.drawRectangle({
-    x: x - 2,
+    x: x - 2.5,
     y: y + h * 0.45,
-    width: w + 4,
-    height: 16,
+    width: w + 5,
+    height: 14,
     color: GRAY,
   });
 }
 
-// Base view
-function drawPhoneBase(page: PDFPage, font: PDFFont, d: PhoneDims) {
+// BASE — y = bottom-left. Horizontal bar.
+function drawPhoneBase(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  roundedRect(page, x, y, w, h, h * 0.4, { stroke: BLACK, thickness: 1 });
+  roundedRect(page, x, y, w, h, h * 0.5, { stroke: BLACK, thickness: 1 });
   // USB-C centered
-  const usbW = w * 0.08;
-  roundedRect(page, x + (w - usbW) / 2, y + h * 0.35, usbW, h * 0.3, h * 0.15, {
-    stroke: BLACK,
-    thickness: 0.7,
-    fill: SUBTLE,
-  });
-  // Speaker grille left
-  for (let i = 0; i < 6; i++) {
+  const usbW = w * 0.1;
+  const usbH = h * 0.4;
+  roundedRect(
+    page,
+    x + (w - usbW) / 2,
+    y + (h - usbH) / 2,
+    usbW,
+    usbH,
+    usbH * 0.4,
+    { stroke: BLACK, thickness: 0.7, fill: SUBTLE },
+  );
+  // Speaker grille left (row of dots)
+  for (let i = 0; i < 5; i++) {
     page.drawCircle({
-      x: x + w * 0.15 + i * 6,
-      y: y + h * 0.5,
-      size: 1,
+      x: x + w * 0.12 + i * 5,
+      y: y + h / 2,
+      size: 0.9,
       color: GRAY,
     });
   }
   // Speaker grille right
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 5; i++) {
     page.drawCircle({
+      x: x + w * 0.68 + i * 5,
+      y: y + h / 2,
+      size: 0.9,
+      color: GRAY,
+    });
+  }
+}
+
       x: x + w * 0.65 + i * 6,
       y: y + h * 0.5,
       size: 1,
