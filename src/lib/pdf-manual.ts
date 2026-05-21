@@ -843,11 +843,11 @@ function pageAesthetic(ctx: Ctx) {
     w: number;
     h: number;
   }> = [
-    { label: "Frente", draw: drawPhoneFront, w: 55, h: 110 },
-    { label: "Verso", draw: drawPhoneBack, w: 55, h: 110 },
-    { label: "Lateral esquerda", draw: drawPhoneLeftSide, w: 14, h: 110 },
-    { label: "Lateral direita", draw: drawPhoneRightSide, w: 14, h: 110 },
-    { label: "Base", draw: drawPhoneBase, w: 55, h: 16 },
+    { label: "Frente", draw: drawPhoneFront, w: 40, h: 80 },
+    { label: "Verso", draw: drawPhoneBack, w: 40, h: 80 },
+    { label: "Lateral esquerda", draw: drawPhoneLeftSide, w: 10, h: 80 },
+    { label: "Lateral direita", draw: drawPhoneRightSide, w: 10, h: 80 },
+    { label: "Base", draw: drawPhoneBase, w: 50, h: 14 },
   ];
 
   const states = ["OK", "Risco leve", "Risco profundo", "Amassado", "Trinca"];
