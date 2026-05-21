@@ -253,44 +253,44 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   );
 }
 
-// iPhone BACK — iPhone 17 style: horizontal pill camera bar with 2 lenses
+// iPhone BACK — iPhone 17 style: vertical pill with 2 stacked lenses
 function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
 
-  // Horizontal camera pill near top-left
-  const pillW = w * 0.6;
-  const pillH = w * 0.22;
-  const pillX = x + w * 0.09;
+  // Vertical camera pill at top-left
+  const pillW = w * 0.26;
+  const pillH = w * 0.58;
+  const pillX = x + w * 0.1;
   const pillY = y + h - w * 0.1 - pillH;
-  roundedRect(page, pillX, pillY, pillW, pillH, pillH / 2, {
+  roundedRect(page, pillX, pillY, pillW, pillH, pillW / 2, {
     stroke: BLACK,
     thickness: 0.8,
     fill: SUBTLE,
   });
 
-  // 2 lenses side by side (left side of pill)
-  const lensR = pillH * 0.32;
-  const lensY = pillY + pillH / 2;
-  const lensX1 = pillX + pillH * 0.55;
-  const lensX2 = lensX1 + lensR * 2.4;
-  for (const lx of [lensX1, lensX2]) {
+  // 2 lenses stacked vertically
+  const lensR = pillW * 0.32;
+  const lensX = pillX + pillW / 2;
+  const lensY1 = pillY + pillH - pillW * 0.55; // top
+  const lensY2 = lensY1 - lensR * 2.4;          // bottom
+  for (const ly of [lensY1, lensY2]) {
     page.drawCircle({
-      x: lx,
-      y: lensY,
+      x: lensX,
+      y: ly,
       size: lensR,
       borderColor: BLACK,
       borderWidth: 0.6,
       color: WHITE,
     });
-    page.drawCircle({ x: lx, y: lensY, size: lensR * 0.5, color: BLACK });
+    page.drawCircle({ x: lensX, y: ly, size: lensR * 0.5, color: BLACK });
   }
 
-  // Flash on right end of pill
+  // Small flash below lenses
   page.drawCircle({
-    x: pillX + pillW - pillH * 0.5,
-    y: lensY,
-    size: lensR * 0.45,
+    x: lensX,
+    y: pillY + pillW * 0.5,
+    size: lensR * 0.5,
     color: LIGHT,
     borderColor: GRAY,
     borderWidth: 0.4,
@@ -321,30 +321,19 @@ function drawPhoneLeftSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
   const bx = x - 1.2;
   const bw = w + 2.4;
+  // Button drawn as thin outlined rounded pill (stroke only, white fill)
+  const btn = (by: number, bh: number, fill = WHITE) =>
+    roundedRect(page, bx, by, bw, bh, Math.min(bw, bh) / 2, {
+      stroke: BLACK,
+      thickness: 0.7,
+      fill,
+    });
   // Action button (small, near top)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.82,
-    width: bw,
-    height: h * 0.05,
-    color: BLACK,
-  });
-  // Volume + (gap below action)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.68,
-    width: bw,
-    height: h * 0.09,
-    color: BLACK,
-  });
-  // Volume - (clear gap below volume+)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.54,
-    width: bw,
-    height: h * 0.09,
-    color: BLACK,
-  });
+  btn(y + h * 0.82, h * 0.05);
+  // Volume +
+  btn(y + h * 0.68, h * 0.09);
+  // Volume -
+  btn(y + h * 0.54, h * 0.09);
   // SIM tray slot (thin line lower portion)
   page.drawLine({
     start: { x: x + w * 0.1, y: y + h * 0.28 },
@@ -360,22 +349,16 @@ function drawPhoneRightSide(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   roundedRect(page, x, y, w, h, w * 0.5, { stroke: BLACK, thickness: 1 });
   const bx = x - 1.2;
   const bw = w + 2.4;
+  const btn = (by: number, bh: number, fill = WHITE) =>
+    roundedRect(page, bx, by, bw, bh, Math.min(bw, bh) / 2, {
+      stroke: BLACK,
+      thickness: 0.7,
+      fill,
+    });
   // Power
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.7,
-    width: bw,
-    height: h * 0.15,
-    color: BLACK,
-  });
-  // Camera Control (lower, lighter color for distinction)
-  page.drawRectangle({
-    x: bx,
-    y: y + h * 0.48,
-    width: bw,
-    height: h * 0.07,
-    color: GRAY,
-  });
+  btn(y + h * 0.7, h * 0.15);
+  // Camera Control (lower)
+  btn(y + h * 0.48, h * 0.07, SUBTLE);
 }
 
 // BASE — y = bottom-left. Horizontal bar.
