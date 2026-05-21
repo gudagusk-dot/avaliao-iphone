@@ -891,7 +891,7 @@ function pageJcid(ctx: Ctx) {
   yy -= 16;
   yy = drawWrapped(
     page,
-    "Abra o app, selecione "Teste completo" (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.",
+    'Abra o app, selecione "Teste completo" (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.',
     MARGIN,
     yy,
     font,
