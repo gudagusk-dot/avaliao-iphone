@@ -144,14 +144,9 @@ function drawHeader(ctx: Ctx) {
     });
     drawText(page, "LOGO", MARGIN + 12, y - 13, { font, size: 8, color: GRAY });
   }
-  drawText(page, branding.storeName || "Sua Loja", PW - MARGIN, y - 12, {
-    font,
-    size: 9,
-    color: GRAY,
-  });
-  // right-align fix
-  const tw = font.widthOfTextAtSize(branding.storeName || "Sua Loja", 9);
-  page.drawText(branding.storeName || "Sua Loja", {
+  const sn = branding.storeName || "Sua Loja";
+  const tw = font.widthOfTextAtSize(sn, 9);
+  page.drawText(sn, {
     x: PW - MARGIN - tw,
     y: y - 12,
     size: 9,
