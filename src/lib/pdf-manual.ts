@@ -253,53 +253,49 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   );
 }
 
-// iPhone BACK — y = bottom-left
+// iPhone BACK — iPhone 17 style: horizontal pill camera bar with 2 lenses
 function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
   roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
-  // Camera bump — top-left quadrant
-  const bumpW = w * 0.42;
-  const bumpX = x + w * 0.08;
-  const bumpY = y + h - w * 0.08 - bumpW; // top-aligned
-  roundedRect(page, bumpX, bumpY, bumpW, bumpW, bumpW * 0.22, {
+
+  // Horizontal camera pill near top-left
+  const pillW = w * 0.6;
+  const pillH = w * 0.22;
+  const pillX = x + w * 0.09;
+  const pillY = y + h - w * 0.1 - pillH;
+  roundedRect(page, pillX, pillY, pillW, pillH, pillH / 2, {
     stroke: BLACK,
     thickness: 0.8,
     fill: SUBTLE,
   });
-  // 3 lenses (top-left, top-right, bottom-left)
-  const lensR = bumpW * 0.16;
-  const lensPositions: Array<[number, number]> = [
-    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.72], // top-left
-    [bumpX + bumpW * 0.72, bumpY + bumpW * 0.72], // top-right
-    [bumpX + bumpW * 0.28, bumpY + bumpW * 0.28], // bottom-left
-  ];
-  for (const [cx, cy] of lensPositions) {
+
+  // 2 lenses side by side (left side of pill)
+  const lensR = pillH * 0.32;
+  const lensY = pillY + pillH / 2;
+  const lensX1 = pillX + pillH * 0.55;
+  const lensX2 = lensX1 + lensR * 2.4;
+  for (const lx of [lensX1, lensX2]) {
     page.drawCircle({
-      x: cx,
-      y: cy,
+      x: lx,
+      y: lensY,
       size: lensR,
       borderColor: BLACK,
       borderWidth: 0.6,
       color: WHITE,
     });
-    page.drawCircle({ x: cx, y: cy, size: lensR * 0.5, color: BLACK });
+    page.drawCircle({ x: lx, y: lensY, size: lensR * 0.5, color: BLACK });
   }
-  // LiDAR (bottom-right of bump)
+
+  // Flash on right end of pill
   page.drawCircle({
-    x: bumpX + bumpW * 0.72,
-    y: bumpY + bumpW * 0.28,
-    size: lensR * 0.55,
-    color: GRAY,
-  });
-  // Flash (middle-right of bump)
-  page.drawCircle({
-    x: bumpX + bumpW * 0.72,
-    y: bumpY + bumpW * 0.5,
-    size: lensR * 0.4,
+    x: pillX + pillW - pillH * 0.5,
+    y: lensY,
+    size: lensR * 0.45,
     color: LIGHT,
     borderColor: GRAY,
     borderWidth: 0.4,
   });
+
   // MagSafe ring (center)
   page.drawCircle({
     x: x + w / 2,
