@@ -419,13 +419,7 @@ function drawPhoneBase(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   }
 }
 
-      x: x + w * 0.65 + i * 6,
-      y: y + h * 0.5,
-      size: 1,
-      color: GRAY,
-    });
-  }
-}
+
 
 // Callout line with label
 function callout(
