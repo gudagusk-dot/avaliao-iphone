@@ -995,7 +995,7 @@ function pageFindMy(ctx: Ctx) {
   });
   drawText(
     page,
-    "Sem desativar o Buscar, a loja não consegue verificar a originalidade das peças nem confirmar que o aparelho está livre. A avaliação não pode ser concluída.",
+    "Sem desativar o Buscar, a loja não consegue confirmar que o aparelho está livre para venda. A avaliação não pode ser concluída.",
     MARGIN + 16,
     PH - 145,
     { font, size: 10, color: rgb(0.5, 0.1, 0.1), maxWidth: PW - MARGIN * 2 - 32 },
