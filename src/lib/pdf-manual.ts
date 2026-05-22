@@ -485,22 +485,20 @@ function pageCover(ctx: Ctx) {
   const subtitle = "Guia oficial para avaliação e troca";
   const sw = font.widthOfTextAtSize(subtitle, 14);
   drawText(page, subtitle, (PW - sw) / 2, py - 40, { font, size: 14, color: GRAY });
-}
-
   // Info card
-  const cardY = PH - 380;
+  const cardY = PH - 780; // Moved lower
   page.drawRectangle({
     x: MARGIN,
     y: cardY,
     width: PW - MARGIN * 2,
-    height: 120,
+    height: 80,
     color: SUBTLE,
     borderColor: LIGHT,
     borderWidth: 0.6,
   });
-  const labels = ["Cliente:", "Modelo:", "IMEI:", "Data:"];
+  const labels = ["Cliente:", "Modelo:"];
   labels.forEach((l, i) => {
-    const yy = cardY + 95 - i * 25;
+    const yy = cardY + 50 - i * 25;
     drawText(page, l, MARGIN + 16, yy, { font: bold, size: 10 });
     page.drawLine({
       start: { x: MARGIN + 80, y: yy - 2 },
@@ -510,34 +508,19 @@ function pageCover(ctx: Ctx) {
     });
   });
 
-  // What this is
-  drawText(page, "O que é este manual", MARGIN, cardY - 40, { font: bold, size: 13 });
-  let yy = cardY - 60;
-  yy = drawWrapped(
-    page,
-    "Este manual orienta o cliente a apresentar o iPhone para avaliação na troca. Inclui um roteiro de vídeo com diagramas, um diagrama dos botões físicos e os testes funcionais via app JCID Doctor. O resultado é usado para definir o valor final do aparelho.",
-    MARGIN,
-    yy,
-    font,
-    10,
-    PW - MARGIN * 2,
-    GRAY,
-  );
-
-  // Contact (if any)
+  // Contact (if any) at the very bottom
   if (branding.instagram || branding.phone) {
-    drawText(page, "Contato:", MARGIN, 80, { font: bold, size: 9 });
-    let cx = MARGIN + 50;
+    let cx = MARGIN;
     if (branding.instagram) {
-      drawText(page, `@${branding.instagram.replace(/^@/, "")}`, cx, 80, {
+      drawText(page, `Instagram: @${branding.instagram.replace(/^@/, "")}`, cx, 40, {
         font,
         size: 9,
         color: GRAY,
       });
-      cx += font.widthOfTextAtSize(`@${branding.instagram}`, 9) + 20;
+      cx += 180;
     }
     if (branding.phone) {
-      drawText(page, branding.phone, cx, 80, { font, size: 9, color: GRAY });
+      drawText(page, `WhatsApp: ${branding.phone}`, cx, 40, { font, size: 9, color: GRAY });
     }
   }
 }
