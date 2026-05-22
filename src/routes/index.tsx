@@ -274,37 +274,43 @@ function Index() {
             </div>
 
             {/* Mock cover preview */}
-            <div className="mt-4 overflow-hidden rounded-xl border border-[oklch(0.92_0.01_255)] bg-white shadow-sm">
-              <div
-                className="flex h-28 items-center justify-between px-6"
-                style={{ background: accent }}
-              >
-                {logoPreview ? (
-                  <img src={logoPreview} alt="" className="max-h-14 object-contain" />
+            <div className="mt-6 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl transition-all hover:shadow-3xl">
+              <div className="relative flex h-32 items-center justify-center bg-neutral-50 p-6">
+                 {logoPreview ? (
+                  <img src={logoPreview} alt="" className="max-h-16 object-contain" />
                 ) : (
-                  <div className="rounded border border-white/60 px-4 py-2 text-xs text-white">
-                    SEU LOGO
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-200 text-[10px] font-bold text-neutral-400">
+                    LOGO
                   </div>
                 )}
-                <div className="text-right text-white">
-                  <div className="text-base font-semibold">
-                    {storeName || "Sua Loja"}
-                  </div>
+                <div className="absolute top-4 right-6 text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                  {storeName || "Sua Loja"}
                 </div>
               </div>
-              <div className="px-6 py-8">
-                <div className="text-2xl font-semibold">Manual de Avaliação</div>
-                <div className="text-2xl font-semibold" style={{ color: accent }}>
+              <div className="px-8 py-10 text-center">
+                <div className="text-3xl font-bold tracking-tight">Manual de Avaliação</div>
+                <div className="text-3xl font-bold tracking-tight" style={{ color: accent }}>
                   de iPhone
                 </div>
-                <p className="mt-2 text-sm text-[oklch(0.55_0.04_257)]">
-                  Guia rápido para o cliente gravar o vídeo e rodar os testes.
+                
+                {/* Minimalist iPhone Frame Mock */}
+                <div className="mx-auto my-10 flex h-64 w-32 flex-col items-center rounded-[2.5rem] border-4 p-1.5 shadow-xl transition-transform hover:scale-105" style={{ borderColor: accent }}>
+                  <div className="h-3 w-12 rounded-full bg-neutral-900 mt-2 mb-1" />
+                  <div className="mt-auto h-1 w-10 rounded-full bg-neutral-200 mb-2" />
+                </div>
+
+                <p className="text-sm font-medium text-neutral-400">
+                  Guia oficial para avaliação e troca
                 </p>
-                <div className="mt-6 rounded-lg bg-[oklch(0.97_0.005_255)] p-4 text-xs text-[oklch(0.45_0.04_257)]">
-                  <div>Cliente: ___________________________</div>
-                  <div className="mt-1">Modelo: ___________________________</div>
-                  <div className="mt-1">IMEI: _____________________________</div>
-                  <div className="mt-1">Data: _____________________________</div>
+                <div className="mt-8 grid grid-cols-2 gap-3 text-left">
+                  <div className="rounded-xl bg-neutral-50 p-3">
+                    <div className="text-[10px] font-bold text-neutral-300 uppercase">Cliente</div>
+                    <div className="h-4 w-full border-b border-neutral-200" />
+                  </div>
+                  <div className="rounded-xl bg-neutral-50 p-3">
+                    <div className="text-[10px] font-bold text-neutral-300 uppercase">Modelo</div>
+                    <div className="h-4 w-full border-b border-neutral-200" />
+                  </div>
                 </div>
               </div>
             </div>
