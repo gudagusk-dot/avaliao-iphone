@@ -236,9 +236,10 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims, opts: { acc
   const { accent = BLACK, showFrame = true } = opts;
   
   if (showFrame) {
-    roundedRect(page, x, y, w, h, w * 0.18, { stroke: accent, thickness: 1.2 });
+    // Making it more rectangular: reducing the corner radius (r)
+    roundedRect(page, x, y, w, h, w * 0.12, { stroke: accent, thickness: 1.2 });
     const inset = w * 0.04;
-    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.15, {
+    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.10, {
       stroke: LIGHT,
       thickness: 0.5,
     });
@@ -261,7 +262,7 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims, opts: { acc
 // iPhone BACK — iPhone 17 style: vertical pill with 2 stacked lenses
 function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
+  roundedRect(page, x, y, w, h, w * 0.12, { stroke: BLACK, thickness: 1 });
 
   // Vertical camera pill at top-left
   const pillW = w * 0.26;
@@ -892,27 +893,6 @@ function pageJcid(ctx: Ctx) {
   yy -= 16;
   yy = drawWrapped(
     page,
-    "Baixe o app JCID Doctor na App Store. Link:",
-    MARGIN,
-    yy,
-    font,
-    10,
-    PW - MARGIN * 2,
-    GRAY,
-  );
-  drawText(
-    page,
-    "https://apps.apple.com/fr/app/jcid-doctor/id6754861928",
-    MARGIN,
-    yy - 6,
-    { font, size: 9.5, color: accent },
-  );
-  yy -= 30;
-
-  drawText(page, "2. Rodar o teste completo", MARGIN, yy, { font: bold, size: 12 });
-  yy -= 16;
-  yy = drawWrapped(
-    page,
     'Abra o app, selecione "Teste completo" (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.',
     MARGIN,
     yy,
@@ -923,7 +903,7 @@ function pageJcid(ctx: Ctx) {
   );
   yy -= 14;
 
-  drawText(page, "3. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
+  drawText(page, "2. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
   yy -= 20;
   const checks = [
     "Saúde da bateria (% e ciclos)",
@@ -994,7 +974,7 @@ function pageFindMy(ctx: Ctx) {
   });
   drawText(
     page,
-    "Sem desativar o Buscar, a loja não consegue verificar a originalidade das peças nem confirmar que o aparelho está livre. A avaliação não pode ser concluída.",
+    "Sem desativar o Buscar, a loja não consegue confirmar que o aparelho está livre para venda. A avaliação não pode ser concluída.",
     MARGIN + 16,
     PH - 145,
     { font, size: 10, color: rgb(0.5, 0.1, 0.1), maxWidth: PW - MARGIN * 2 - 32 },
