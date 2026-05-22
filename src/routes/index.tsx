@@ -28,6 +28,7 @@ function Index() {
   const [logoPreview, setLogoPreview] = useState<string | undefined>();
   const [generating, setGenerating] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | undefined>();
+  const [showPromo, setShowPromo] = useState(false);
 
   // Load saved branding (text only)
   useEffect(() => {
@@ -100,6 +101,9 @@ function Index() {
       const safe = (storeName || "manual").toLowerCase().replace(/[^a-z0-9]+/g, "-");
       a.download = `manual-avaliacao-iphone-${safe}.pdf`;
       a.click();
+      
+      // Show promo popup
+      setShowPromo(true);
     } catch (e) {
       console.error(e);
       alert("Erro ao gerar o PDF. Tente novamente.");
@@ -365,10 +369,63 @@ function Index() {
           </section>
         </div>
 
-        <footer className="mt-12 border-t border-[oklch(0.92_0.01_255)] pt-6 text-center text-xs text-[oklch(0.55_0.04_257)]">
+        <footer className="mt-12 border-t border-neutral-200/50 pt-6 text-center text-xs text-neutral-400">
           Gerado no seu navegador. Nada é enviado para servidores.
         </footer>
       </main>
+
+      {/* PROMO POPUP */}
+      {showPromo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-sm bg-black/20 animate-in fade-in duration-300">
+          <div className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setShowPromo(false)}
+              className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition hover:bg-neutral-200"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+              </svg>
+            </button>
+            
+            <div className="p-8 text-center">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-black shadow-lg">
+                <svg viewBox="0 0 24 24" className="h-8 w-8 fill-white">
+                  <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C4.38 17 4.1 11.2 7 8.3c1.4-1.4 3-1.6 4.3-1.1 1.2.4 2.1.4 3.3 0 1.1-.5 2.8-.8 4 .8-2.6 1.8-2.1 5.4.5 6.4-1.1 2.5-2.2 4.1-2.05 5.88M12.03 7.25c-.1 0-.1 0 0 0 2.22-.27 3.34-1.9 3.14-3.5-1.93.12-3.3 1.6-3.14 3.5" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold tracking-tight text-neutral-900">
+                Sua loja Apple pode lucrar muito mais!
+              </h3>
+              
+              <p className="mt-4 text-neutral-500 text-sm leading-relaxed">
+                Mais conteúdos e ferramentas para a sua loja Apple, você encontra na comunidade.
+              </p>
+              
+              <div className="mt-6 inline-block rounded-full bg-neutral-100 px-4 py-2 text-sm font-bold text-neutral-900">
+                A partir de <span className="text-blue-600 font-extrabold">R$97 por mês</span>
+              </div>
+              
+              <div className="mt-8 flex flex-col gap-3">
+                <a
+                  href="https://www.comunidademacalucrativa.com.br/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl bg-black py-4 text-sm font-bold text-white shadow-xl transition hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Conhecer a Comunidade
+                </a>
+                <button
+                  onClick={() => setShowPromo(false)}
+                  className="text-xs font-bold text-neutral-400 hover:text-neutral-600 transition"
+                >
+                  Continuar no site
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
