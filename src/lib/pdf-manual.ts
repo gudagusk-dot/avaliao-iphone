@@ -903,7 +903,7 @@ function pageJcid(ctx: Ctx) {
   );
   yy -= 14;
 
-  drawText(page, "3. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
+  drawText(page, "2. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
   yy -= 20;
   const checks = [
     "Saúde da bateria (% e ciclos)",
