@@ -28,6 +28,7 @@ function Index() {
   const [logoPreview, setLogoPreview] = useState<string | undefined>();
   const [generating, setGenerating] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | undefined>();
+  const [showPromo, setShowPromo] = useState(false);
 
   // Load saved branding (text only)
   useEffect(() => {
@@ -100,6 +101,9 @@ function Index() {
       const safe = (storeName || "manual").toLowerCase().replace(/[^a-z0-9]+/g, "-");
       a.download = `manual-avaliacao-iphone-${safe}.pdf`;
       a.click();
+      
+      // Show promo popup
+      setShowPromo(true);
     } catch (e) {
       console.error(e);
       alert("Erro ao gerar o PDF. Tente novamente.");
