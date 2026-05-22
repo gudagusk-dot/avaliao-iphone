@@ -236,9 +236,10 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims, opts: { acc
   const { accent = BLACK, showFrame = true } = opts;
   
   if (showFrame) {
-    roundedRect(page, x, y, w, h, w * 0.18, { stroke: accent, thickness: 1.2 });
+    // Making it more rectangular: reducing the corner radius (r)
+    roundedRect(page, x, y, w, h, w * 0.12, { stroke: accent, thickness: 1.2 });
     const inset = w * 0.04;
-    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.15, {
+    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.10, {
       stroke: LIGHT,
       thickness: 0.5,
     });
@@ -261,7 +262,7 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims, opts: { acc
 // iPhone BACK — iPhone 17 style: vertical pill with 2 stacked lenses
 function drawPhoneBack(page: PDFPage, _font: PDFFont, d: PhoneDims) {
   const { x, y, w, h } = d;
-  roundedRect(page, x, y, w, h, w * 0.13, { stroke: BLACK, thickness: 1 });
+  roundedRect(page, x, y, w, h, w * 0.12, { stroke: BLACK, thickness: 1 });
 
   // Vertical camera pill at top-left
   const pillW = w * 0.26;
