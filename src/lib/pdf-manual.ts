@@ -236,9 +236,9 @@ function drawPhoneFront(page: PDFPage, _font: PDFFont, d: PhoneDims, opts: { acc
   const { accent = BLACK, showFrame = true } = opts;
   
   if (showFrame) {
-    roundedRect(page, x, y, w, h, w * 0.13, { stroke: accent, thickness: 1.2 });
+    roundedRect(page, x, y, w, h, w * 0.18, { stroke: accent, thickness: 1.2 });
     const inset = w * 0.04;
-    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.1, {
+    roundedRect(page, x + inset, y + inset, w - inset * 2, h - inset * 2, w * 0.15, {
       stroke: LIGHT,
       thickness: 0.5,
     });
@@ -927,7 +927,6 @@ function pageJcid(ctx: Ctx) {
   yy -= 20;
   const checks = [
     "Saúde da bateria (% e ciclos)",
-    "Originalidade da bateria, tela e câmera (peças não trocadas)",
     "Face ID funcionando",
     "Câmeras (frontal, principal, ultra-wide, tele) sem falha",
     "Microfones e alto-falantes OK",
