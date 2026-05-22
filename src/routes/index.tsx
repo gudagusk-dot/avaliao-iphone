@@ -147,21 +147,23 @@ function Index() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-16">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-16">
         <div className="text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight text-neutral-950 sm:text-6xl">
-            O manual de avaliação <br/>
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(to right, ${accent}, #000)` }}>
+          <h1 className="text-3xl font-extrabold tracking-tight text-neutral-950 sm:text-6xl">
+            <span className="sm:hidden">Manual de Avaliação</span>
+            <span className="hidden sm:inline">O manual de avaliação <br/></span>
+            <span className="block bg-clip-text text-transparent sm:inline" style={{ backgroundImage: `linear-gradient(to right, ${accent}, #000)` }}>
               no padrão Apple.
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-neutral-500">
-            Personalize o seu guia de troca com o logo da sua loja. 
-            Design minimalista, profissional e focado na conversão de vendas.
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-neutral-500 sm:mt-6 sm:text-lg">
+            <span className="sm:hidden">Personalize e baixe seu PDF.</span>
+            <span className="hidden sm:inline">Personalize o seu guia de troca com o logo da sua loja. Design minimalista, profissional e focado na conversão de vendas.</span>
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
+
+        <div className="mt-6 grid gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[1fr_1fr]">
           {/* FORM */}
           <section className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
             <h2 className="text-xl font-bold">Sua marca</h2>
