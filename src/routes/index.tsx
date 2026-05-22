@@ -159,28 +159,31 @@ function Index() {
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
           {/* FORM */}
-          <section className="rounded-2xl border border-[oklch(0.92_0.01_255)] bg-white p-6">
-            <h2 className="text-lg font-semibold">Sua marca</h2>
+          <section className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
+            <h2 className="text-xl font-bold">Sua marca</h2>
+            <p className="mt-1 text-sm text-neutral-400">Personalize a identidade do seu manual.</p>
 
-            <div className="mt-5 space-y-5">
+            <div className="mt-8 space-y-6">
               {/* Logo */}
               <div>
-                <label className="text-sm font-medium">Logo (PNG ou JPG)</label>
-                <div className="mt-2 flex items-center gap-4">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-xl border border-dashed border-[oklch(0.85_0.01_255)] bg-[oklch(0.97_0.005_255)]">
+                <label className="text-sm font-semibold text-neutral-700">Logo da Loja</label>
+                <div className="mt-3 flex items-center gap-6">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-neutral-100 bg-neutral-50 shadow-inner">
                     {logoPreview ? (
                       <img
                         src={logoPreview}
                         alt="logo"
-                        className="max-h-full max-w-full object-contain p-2"
+                        className="max-h-full max-w-full object-contain p-3"
                       />
                     ) : (
-                      <span className="text-xs text-[oklch(0.55_0.04_257)]">Sem logo</span>
+                      <svg viewBox="0 0 24 24" className="h-8 w-8 fill-neutral-200">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z" />
+                      </svg>
                     )}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="cursor-pointer rounded-lg bg-[oklch(0.2_0.04_265)] px-3 py-2 text-xs font-medium text-white hover:opacity-90">
-                      Escolher arquivo
+                  <div className="flex flex-col gap-3">
+                    <label className="group relative flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2.5 text-xs font-bold text-white transition hover:bg-neutral-800">
+                      <span>Trocar Logo</span>
                       <input
                         type="file"
                         accept="image/png,image/jpeg"
@@ -191,9 +194,9 @@ function Index() {
                     {logoPreview && (
                       <button
                         onClick={removeLogo}
-                        className="text-xs text-[oklch(0.55_0.04_257)] hover:underline"
+                        className="text-xs font-semibold text-red-500 hover:text-red-600"
                       >
-                        Remover
+                        Remover Logo
                       </button>
                     )}
                   </div>
@@ -202,69 +205,85 @@ function Index() {
 
               {/* Store name */}
               <Field
-                label="Nome da loja"
+                label="Nome da Empresa"
                 value={storeName}
                 onChange={setStoreName}
-                placeholder="Ex: iStore Curitiba"
+                placeholder="Ex: Apple Curitiba"
               />
 
-              {/* Instagram */}
-              <Field
-                label="Instagram (opcional)"
-                value={instagram}
-                onChange={setInstagram}
-                placeholder="suaLoja"
-              />
-
-              {/* Phone */}
-              <Field
-                label="Telefone / WhatsApp (opcional)"
-                value={phone}
-                onChange={setPhone}
-                placeholder="(41) 9 9999-9999"
-              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Instagram"
+                  value={instagram}
+                  onChange={setInstagram}
+                  placeholder="@sualoja"
+                />
+                <Field
+                  label="WhatsApp"
+                  value={phone}
+                  onChange={setPhone}
+                  placeholder="(00) 00000-0000"
+                />
+              </div>
 
               {/* Accent */}
               <div>
-                <label className="text-sm font-medium">Cor de destaque</label>
-                <div className="mt-2 flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={accent}
-                    onChange={(e) => setAccent(e.target.value)}
-                    className="h-10 w-14 cursor-pointer rounded border border-[oklch(0.85_0.01_255)]"
-                  />
+                <label className="text-sm font-semibold text-neutral-700">Cor de Destaque</label>
+                <div className="mt-3 flex items-center gap-4">
+                  <div className="relative h-10 w-10 overflow-hidden rounded-full border border-neutral-200">
+                    <input
+                      type="color"
+                      value={accent}
+                      onChange={(e) => setAccent(e.target.value)}
+                      className="absolute inset-[-50%] h-[200%] w-[200%] cursor-pointer"
+                    />
+                  </div>
                   <input
                     type="text"
                     value={accent}
                     onChange={(e) => setAccent(e.target.value)}
-                    className="rounded-lg border border-[oklch(0.85_0.01_255)] bg-white px-3 py-2 text-sm w-32"
+                    className="w-32 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-black/5"
                   />
                   <button
                     onClick={() => setAccent("#007AFF")}
-                    className="text-xs text-[oklch(0.55_0.04_257)] hover:underline"
+                    className="text-xs font-bold text-blue-600 hover:underline"
                   >
-                    Padrão Apple
+                    Resetar
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 flex flex-col gap-3">
+            <div className="mt-10 flex flex-col gap-4">
               <button
                 onClick={() => handleGenerate(true)}
                 disabled={generating}
-                className="rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50"
-                style={{ background: accent }}
+                className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-black py-4 text-sm font-bold text-white shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
               >
-                {generating ? "Gerando…" : "Baixar PDF personalizado"}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+                {generating ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Gerando PDF...
+                  </span>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white">
+                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                    Gerar Manual Profissional
+                  </>
+                )}
               </button>
               <button
                 onClick={() => handleGenerate(false)}
                 disabled={generating}
-                className="text-xs text-[oklch(0.55_0.04_257)] hover:underline disabled:opacity-50"
+                className="text-xs font-bold text-neutral-400 transition hover:text-neutral-600"
               >
-                Baixar versão padrão sem logo
+                Gerar versão genérica (sem logo)
               </button>
             </div>
           </section>
