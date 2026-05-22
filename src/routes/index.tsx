@@ -147,21 +147,23 @@ function Index() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-16">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-16">
         <div className="text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight text-neutral-950 sm:text-6xl">
-            O manual de avaliação <br/>
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(to right, ${accent}, #000)` }}>
+          <h1 className="text-3xl font-extrabold tracking-tight text-neutral-950 sm:text-6xl">
+            <span className="sm:hidden">Manual de Avaliação</span>
+            <span className="hidden sm:inline">O manual de avaliação <br/></span>
+            <span className="block bg-clip-text text-transparent sm:inline" style={{ backgroundImage: `linear-gradient(to right, ${accent}, #000)` }}>
               no padrão Apple.
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-neutral-500">
-            Personalize o seu guia de troca com o logo da sua loja. 
-            Design minimalista, profissional e focado na conversão de vendas.
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-neutral-500 sm:mt-6 sm:text-lg">
+            <span className="sm:hidden">Personalize e baixe seu PDF.</span>
+            <span className="hidden sm:inline">Personalize o seu guia de troca com o logo da sua loja. Design minimalista, profissional e focado na conversão de vendas.</span>
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
+
+        <div className="mt-6 grid gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[1fr_1fr]">
           {/* FORM */}
           <section className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
             <h2 className="text-xl font-bold">Sua marca</h2>
@@ -292,31 +294,23 @@ function Index() {
             </div>
           </section>
 
-          {/* PREVIEW */}
-          <section className="rounded-2xl border border-[oklch(0.92_0.01_255)] bg-white p-6">
+          {/* PREVIEW — desktop only */}
+          <section className="hidden rounded-2xl border border-[oklch(0.92_0.01_255)] bg-white p-6 lg:block">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Pré-visualização</h2>
               {pdfUrl && (
-                <a
-                  href={pdfUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-[oklch(0.55_0.04_257)] hover:underline"
-                >
+                <a href={pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-[oklch(0.55_0.04_257)] hover:underline">
                   Abrir em nova aba ↗
                 </a>
               )}
             </div>
 
-            {/* Mock cover preview */}
-            <div className="mt-6 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl transition-all hover:shadow-3xl">
+            <div className="mt-6 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl">
               <div className="relative flex h-32 items-center justify-center bg-neutral-50 p-6">
-                 {logoPreview ? (
+                {logoPreview ? (
                   <img src={logoPreview} alt="" className="max-h-16 object-contain" />
                 ) : (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-200 text-[10px] font-bold text-neutral-400">
-                    LOGO
-                  </div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-200 text-[10px] font-bold text-neutral-400">LOGO</div>
                 )}
                 <div className="absolute top-4 right-6 text-xs font-bold text-neutral-400 uppercase tracking-widest">
                   {storeName || "Sua Loja"}
@@ -324,48 +318,20 @@ function Index() {
               </div>
               <div className="px-8 py-10 text-center">
                 <div className="text-3xl font-bold tracking-tight">Manual de Avaliação</div>
-                <div className="text-3xl font-bold tracking-tight" style={{ color: accent }}>
-                  de iPhone
-                </div>
-                
-                {/* Minimalist iPhone Frame Mock */}
-                <div className="mx-auto my-10 flex h-64 w-32 flex-col items-center rounded-[1.5rem] border-4 p-1.5 shadow-xl transition-transform hover:scale-105" style={{ borderColor: accent }}>
+                <div className="text-3xl font-bold tracking-tight" style={{ color: accent }}>de iPhone</div>
+                <div className="mx-auto my-10 flex h-64 w-32 flex-col items-center rounded-[1.5rem] border-4 p-1.5 shadow-xl" style={{ borderColor: accent }}>
                   <div className="h-2 w-10 rounded-full bg-neutral-900 mt-2 mb-1" />
                   <div className="mt-auto h-1 w-10 rounded-full bg-neutral-200 mb-2" />
                 </div>
-
-                <p className="text-sm font-medium text-neutral-400">
-                  Guia oficial para avaliação e troca
-                </p>
-                <div className="mt-8 grid grid-cols-2 gap-3 text-left">
-                  <div className="rounded-xl bg-neutral-50 p-3">
-                    <div className="text-[10px] font-bold text-neutral-300 uppercase">Cliente</div>
-                    <div className="h-4 w-full border-b border-neutral-200" />
-                  </div>
-                  <div className="rounded-xl bg-neutral-50 p-3">
-                    <div className="text-[10px] font-bold text-neutral-300 uppercase">Modelo</div>
-                    <div className="h-4 w-full border-b border-neutral-200" />
-                  </div>
-                </div>
+                <p className="text-sm font-medium text-neutral-400">Guia oficial para avaliação e troca</p>
               </div>
             </div>
 
             {pdfUrl && (
               <div className="mt-4 overflow-hidden rounded-xl border border-[oklch(0.92_0.01_255)]">
-                <iframe
-                  src={pdfUrl}
-                  className="h-[500px] w-full"
-                  title="Preview PDF"
-                />
+                <iframe src={pdfUrl} className="h-[500px] w-full" title="Preview PDF" />
               </div>
             )}
-
-            <div className="mt-6 text-xs text-[oklch(0.55_0.04_257)]">
-              <strong className="text-[oklch(0.2_0.04_265)]">O que tem no PDF:</strong> capa
-              personalizada · como usar · roteiro de vídeo com diagramas do iPhone · diagrama
-              dos botões físicos · checklist estético · testes via JCID Doctor · desativar o
-              Buscar.
-            </div>
           </section>
         </div>
 
