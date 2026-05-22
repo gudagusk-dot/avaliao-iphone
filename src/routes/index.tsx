@@ -109,41 +109,53 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-[oklch(0.985_0.002_247)]">
+    <div className="min-h-screen bg-neutral-50 font-sans text-neutral-900">
       {/* Header */}
-      <header className="border-b border-[oklch(0.92_0.01_255)] bg-white">
+      <header className="sticky top-0 z-50 border-b border-neutral-200/50 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="h-8 w-8 rounded-lg"
-              style={{ background: accent }}
-            />
+          <div className="flex items-center gap-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black shadow-lg">
+              <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white">
+                <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C4.38 17 4.1 11.2 7 8.3c1.4-1.4 3-1.6 4.3-1.1 1.2.4 2.1.4 3.3 0 1.1-.5 2.8-.8 4 .8-2.6 1.8-2.1 5.4.5 6.4-1.1 2.5-2.2 4.1-2.05 5.88M12.03 7.25c-.1 0-.1 0 0 0 2.22-.27 3.34-1.9 3.14-3.5-1.93.12-3.3 1.6-3.14 3.5" />
+              </svg>
+            </div>
             <div>
-              <div className="text-sm font-semibold">Manual de Avaliação</div>
-              <div className="text-xs text-[oklch(0.55_0.04_257)]">
-                Personalize e baixe em PDF
+              <div className="text-base font-bold tracking-tight">iPhone Manual Pro</div>
+              <div className="text-[10px] font-medium uppercase tracking-widest text-neutral-400">
+                Avaliação Profissional
               </div>
             </div>
           </div>
-          <a
-            href="https://apps.apple.com/fr/app/jcid-doctor/id6754861928"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs text-[oklch(0.55_0.04_257)] hover:underline"
-          >
-            App JCID Doctor ↗
-          </a>
+          <div className="flex items-center gap-6">
+            <a
+              href="https://apps.apple.com/fr/app/jcid-doctor/id6754861928"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm font-medium text-neutral-600 transition hover:text-black"
+            >
+              JCID Doctor ↗
+            </a>
+            <div 
+              className="h-2 w-2 rounded-full animate-pulse" 
+              style={{ background: accent }}
+            />
+          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-10">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Gerador do Manual de Avaliação de iPhone
-        </h1>
-        <p className="mt-2 max-w-2xl text-[oklch(0.45_0.04_257)]">
-          Coloque o logo e o nome da sua loja e baixe o PDF personalizado.
-          Sem cadastro, gerado direto no seu navegador.
-        </p>
+      <main className="mx-auto max-w-6xl px-6 py-16">
+        <div className="text-center">
+          <h1 className="text-5xl font-extrabold tracking-tight text-neutral-950 sm:text-6xl">
+            O manual de avaliação <br/>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(to right, ${accent}, #000)` }}>
+              no padrão Apple.
+            </span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-neutral-500">
+            Personalize o seu guia de troca com o logo da sua loja. 
+            Design minimalista, profissional e focado na conversão de vendas.
+          </p>
+        </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
           {/* FORM */}
