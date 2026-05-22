@@ -325,8 +325,8 @@ function Index() {
                 </div>
                 
                 {/* Minimalist iPhone Frame Mock */}
-                <div className="mx-auto my-10 flex h-64 w-32 flex-col items-center rounded-[2.5rem] border-4 p-1.5 shadow-xl transition-transform hover:scale-105" style={{ borderColor: accent }}>
-                  <div className="h-3 w-12 rounded-full bg-neutral-900 mt-2 mb-1" />
+                <div className="mx-auto my-10 flex h-64 w-32 flex-col items-center rounded-[1.5rem] border-4 p-1.5 shadow-xl transition-transform hover:scale-105" style={{ borderColor: accent }}>
+                  <div className="h-2 w-10 rounded-full bg-neutral-900 mt-2 mb-1" />
                   <div className="mt-auto h-1 w-10 rounded-full bg-neutral-200 mb-2" />
                 </div>
 
