@@ -893,27 +893,6 @@ function pageJcid(ctx: Ctx) {
   yy -= 16;
   yy = drawWrapped(
     page,
-    "Baixe o app JCID Doctor na App Store. Link:",
-    MARGIN,
-    yy,
-    font,
-    10,
-    PW - MARGIN * 2,
-    GRAY,
-  );
-  drawText(
-    page,
-    "https://apps.apple.com/fr/app/jcid-doctor/id6754861928",
-    MARGIN,
-    yy - 6,
-    { font, size: 9.5, color: accent },
-  );
-  yy -= 30;
-
-  drawText(page, "2. Rodar o teste completo", MARGIN, yy, { font: bold, size: 12 });
-  yy -= 16;
-  yy = drawWrapped(
-    page,
     'Abra o app, selecione "Teste completo" (ou equivalente) e siga as instruções na tela. O teste pode pedir para tocar em áreas da tela, falar no microfone, usar o Face ID, abrir as câmeras, etc. Execute tudo até o fim.',
     MARGIN,
     yy,
