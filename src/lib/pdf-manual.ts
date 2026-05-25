@@ -886,7 +886,9 @@ function pageAesthetic(ctx: Ctx) {
 
     // label
     drawText(page, f.label, MARGIN + 90, yy - 18, { font: bold, size: 12 });
-    drawText(page, "(Clique no botão para marcar)", MARGIN + 180, yy - 18, { font, size: 7, color: accent });
+    const hint2 = "(Clique no botão para marcar)";
+    const hint2W = font.widthOfTextAtSize(hint2, 7);
+    drawText(page, hint2, PW - MARGIN - 16 - hint2W, yy - 18, { font, size: 7, color: accent });
 
     // checkboxes
     let cx = MARGIN + 90;
@@ -952,7 +954,9 @@ function pageJcid(ctx: Ctx) {
   yy -= 14;
 
   drawText(page, "2. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
-  drawText(page, "(Clique no botão para marcar)", MARGIN + 200, yy, { font, size: 8, color: accent });
+  const hint3 = "(Clique no botão para marcar)";
+  const hint3W = font.widthOfTextAtSize(hint3, 8);
+  drawText(page, hint3, PW - MARGIN - hint3W, yy, { font, size: 8, color: accent });
   yy -= 20;
   const checks = [
     "Saúde da bateria (% e ciclos)",
