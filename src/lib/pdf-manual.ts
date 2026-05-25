@@ -104,62 +104,56 @@ function drawWrapped(
 }
 
 function drawSwitch(page: PDFPage, x: number, y: number, label?: string) {
-  const width = 24;
-  const height = 13;
+  const width = 26;
+  const height = 15;
   const borderRadius = height / 2;
   
+  // Base background for the switch
+  roundedRect(page, x, y, width, height, borderRadius, { 
+    fill: rgb(0.9, 0.9, 0.92), 
+    stroke: rgb(0.85, 0.85, 0.87),
+    thickness: 0.4 
+  });
+
   if ((page as any).isInteractive) {
     const form = (page as any).doc.getForm();
     const checkBox = form.createCheckBox(label || `sw-${Math.random()}`);
     
-    // Custom appearance for the switch
-    // Note: PDF-lib doesn't have a direct "switch" primitive for form fields,
-    // so we use a checkbox and style its appearance to look like an iOS switch.
+    // Transparent checkbox overlay
     checkBox.addToPage(page, {
       x,
       y,
       width,
       height,
       borderWidth: 0,
-      backgroundColor: rgb(0.9, 0.9, 0.9), // Light gray background
+      backgroundColor: undefined,
     });
     
-    // Since we can't easily draw custom complex "on/off" states in pure pdf-lib form appearances
-    // without more complex XObjects, we'll draw the background as a rounded rect first.
-    roundedRect(page, x, y, width, height, borderRadius, { 
-      fill: rgb(0.92, 0.92, 0.94), 
-      stroke: rgb(0.85, 0.85, 0.88),
-      thickness: 0.5 
-    });
-    
-    // Draw the "thumb" (circle)
+    // We draw the "thumb" in a neutral "off" position for the static PDF content
+    // Users can click the invisible checkbox overlay.
+    // Note: To have the thumb move, we'd need PDF appearances (XObjects), which are complex to build manually.
+    // Instead, we ensure the UI looks clean and minimal.
     page.drawCircle({
       x: x + borderRadius,
       y: y + borderRadius,
-      size: borderRadius - 1.5,
+      size: borderRadius - 2,
       color: WHITE,
       borderColor: rgb(0.8, 0.8, 0.8),
-      borderWidth: 0.3,
+      borderWidth: 0.2,
     });
   } else {
-    // Static fallback
-    roundedRect(page, x, y, width, height, borderRadius, { 
-      fill: rgb(0.92, 0.92, 0.94),
-      stroke: GRAY,
-      thickness: 0.5
-    });
     page.drawCircle({
       x: x + borderRadius,
       y: y + borderRadius,
-      size: borderRadius - 1.5,
+      size: borderRadius - 2,
       color: WHITE,
     });
   }
 }
 
 function drawCheckbox(page: PDFPage, x: number, y: number, size = 10, label?: string) {
-  // We'll use the switch style globally for checkboxes to follow the user's request
-  drawSwitch(page, x, y - 1, label);
+  // Use a cleaner, slightly larger switch style
+  drawSwitch(page, x, y - 2, label);
 }
 
 function drawDivider(page: PDFPage, y: number, color: RGB = LIGHT) {
@@ -810,7 +804,7 @@ function pageButtonsDiagram(ctx: Ctx) {
     { y: pyBottom + phoneH * 0.58, label: "Volume -", desc: "Pressione 1x" },
   ];
   leftBtns.forEach((b) => {
-    page.drawRectangle({ x: px - 4, y: b.y, width: 5, height: 10, color: BLACK });
+    roundedRect(page, px - 4, b.y, 5, 10, 2, { fill: BLACK, stroke: BLACK });
     callout(page, font, px - 4, b.y + 5, px - 70, b.y + 5, b.label, "left", 8);
     const dw = font.widthOfTextAtSize(b.desc, 7);
     page.drawText(b.desc, {
@@ -828,7 +822,7 @@ function pageButtonsDiagram(ctx: Ctx) {
     { y: pyBottom + phoneH * 0.55, label: "Camera Control", desc: "Pressione (15/16 Pro)" },
   ];
   rightBtns.forEach((b) => {
-    page.drawRectangle({ x: px + phoneW - 1, y: b.y, width: 5, height: 14, color: BLACK });
+    roundedRect(page, px + phoneW - 1, b.y, 5, 14, 2, { fill: BLACK, stroke: BLACK });
     callout(page, font, px + phoneW + 4, b.y + 7, px + phoneW + 60, b.y + 7, b.label, "right", 8);
     page.drawText(b.desc, {
       x: px + phoneW + 63,
