@@ -103,29 +103,63 @@ function drawWrapped(
   return y - lines.length * lh;
 }
 
-function drawCheckbox(page: PDFPage, x: number, y: number, size = 10, label?: string) {
+function drawSwitch(page: PDFPage, x: number, y: number, label?: string) {
+  const width = 24;
+  const height = 13;
+  const borderRadius = height / 2;
+  
   if ((page as any).isInteractive) {
     const form = (page as any).doc.getForm();
-    const checkBox = form.createCheckBox(label || `cb-${Math.random()}`);
+    const checkBox = form.createCheckBox(label || `sw-${Math.random()}`);
+    
+    // Custom appearance for the switch
+    // Note: PDF-lib doesn't have a direct "switch" primitive for form fields,
+    // so we use a checkbox and style its appearance to look like an iOS switch.
     checkBox.addToPage(page, {
       x,
       y,
-      width: size,
-      height: size,
-      borderWidth: 0.8,
-      borderColor: BLACK,
+      width,
+      height,
+      borderWidth: 0,
+      backgroundColor: rgb(0.9, 0.9, 0.9), // Light gray background
+    });
+    
+    // Since we can't easily draw custom complex "on/off" states in pure pdf-lib form appearances
+    // without more complex XObjects, we'll draw the background as a rounded rect first.
+    roundedRect(page, x, y, width, height, borderRadius, { 
+      fill: rgb(0.92, 0.92, 0.94), 
+      stroke: rgb(0.85, 0.85, 0.88),
+      thickness: 0.5 
+    });
+    
+    // Draw the "thumb" (circle)
+    page.drawCircle({
+      x: x + borderRadius,
+      y: y + borderRadius,
+      size: borderRadius - 1.5,
+      color: WHITE,
+      borderColor: rgb(0.8, 0.8, 0.8),
+      borderWidth: 0.3,
     });
   } else {
-    page.drawRectangle({
-      x,
-      y,
-      width: size,
-      height: size,
-      borderColor: BLACK,
-      borderWidth: 0.8,
+    // Static fallback
+    roundedRect(page, x, y, width, height, borderRadius, { 
+      fill: rgb(0.92, 0.92, 0.94),
+      stroke: GRAY,
+      thickness: 0.5
+    });
+    page.drawCircle({
+      x: x + borderRadius,
+      y: y + borderRadius,
+      size: borderRadius - 1.5,
       color: WHITE,
     });
   }
+}
+
+function drawCheckbox(page: PDFPage, x: number, y: number, size = 10, label?: string) {
+  // We'll use the switch style globally for checkboxes to follow the user's request
+  drawSwitch(page, x, y - 1, label);
 }
 
 function drawDivider(page: PDFPage, y: number, color: RGB = LIGHT) {
@@ -822,7 +856,7 @@ function pageButtonsDiagram(ctx: Ctx) {
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
     drawCheckbox(page, MARGIN, yy, 10, `btn-check-${i}`);
-    drawText(page, it, MARGIN + 18, yy + 1, { font, size: 9.5 });
+    drawText(page, it, MARGIN + 32, yy + 1, { font, size: 9.5 });
     yy -= 18;
   }
 }
@@ -884,7 +918,7 @@ function pageAesthetic(ctx: Ctx) {
       const xx = cx + (i % 3) * 130;
       const yyc = cy - Math.floor(i / 3) * 20;
       drawCheckbox(page, xx, yyc, 9, `aesthetic-${f.label}-${s}`);
-      drawText(page, s, xx + 14, yyc, { font, size: 9 });
+      drawText(page, s, xx + 28, yyc + 1, { font, size: 9 });
     });
 
     // observation line
@@ -955,7 +989,7 @@ function pageJcid(ctx: Ctx) {
   for (let i = 0; i < checks.length; i++) {
     const c = checks[i];
     drawCheckbox(page, MARGIN, yy, 9, `jcid-check-${i}`);
-    drawText(page, c, MARGIN + 16, yy, { font, size: 9.5 });
+    drawText(page, c, MARGIN + 32, yy + 1, { font, size: 9.5 });
     yy -= 16;
   }
 
