@@ -816,7 +816,9 @@ function pageButtonsDiagram(ctx: Ctx) {
   let yy = pyBottom - 25;
   drawDivider(page, yy + 12);
   drawText(page, "Checklist dos botões", MARGIN, yy, { font: bold, size: 12 });
-  drawText(page, "(Clique no botão para marcar)", MARGIN + 120, yy, { font, size: 8, color: accent });
+  const hint1 = "(Clique no botão para marcar)";
+  const hint1W = font.widthOfTextAtSize(hint1, 8);
+  drawText(page, hint1, PW - MARGIN - hint1W, yy, { font, size: 8, color: accent });
   yy -= 22;
   const items = [
     "Action Button / switch mute alterna corretamente",
