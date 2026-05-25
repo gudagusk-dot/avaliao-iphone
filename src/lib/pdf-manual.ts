@@ -513,7 +513,7 @@ function pageCover(ctx: Ctx) {
     borderWidth: 0.6,
   });
   const labels = ["Cliente:", "Modelo:"];
-  const form = doc.getForm();
+  const form = ctx.doc.getForm();
   labels.forEach((l, i) => {
     const yy = cardY + 50 - i * 25;
     drawText(page, l, MARGIN + 16, yy, { font: bold, size: 10 });
@@ -889,6 +889,16 @@ function pageAesthetic(ctx: Ctx) {
 
     // observation line
     drawText(page, "Obs:", MARGIN + 90, yy - cardH + 14, { font: bold, size: 8.5 });
+    
+    const obsField = ctx.doc.getForm().createTextField(`obs-${f.label}`);
+    obsField.addToPage(page, {
+      x: MARGIN + 115,
+      y: yy - cardH + 13,
+      width: PW - MARGIN - 115 - 16,
+      height: 10,
+      borderWidth: 0,
+    });
+
     page.drawLine({
       start: { x: MARGIN + 115, y: yy - cardH + 13 },
       end: { x: PW - MARGIN - 16, y: yy - cardH + 13 },
@@ -1058,7 +1068,6 @@ function pageFindMy(ctx: Ctx) {
 // =====================================================
 
 export async function generateManualPdf(branding: BrandingInput): Promise<Uint8Array> {
-  const isInteractive = true; // For now we'll make it default or we could add to BrandingInput
   const doc = await PDFDocument.create();
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
