@@ -103,16 +103,29 @@ function drawWrapped(
   return y - lines.length * lh;
 }
 
-function drawCheckbox(page: PDFPage, x: number, y: number, size = 10) {
-  page.drawRectangle({
-    x,
-    y,
-    width: size,
-    height: size,
-    borderColor: BLACK,
-    borderWidth: 0.8,
-    color: WHITE,
-  });
+function drawCheckbox(page: PDFPage, x: number, y: number, size = 10, label?: string) {
+  if ((page as any).isInteractive) {
+    const form = (page as any).doc.getForm();
+    const checkBox = form.createCheckBox(label || `cb-${Math.random()}`);
+    checkBox.addToPage(page, {
+      x,
+      y,
+      width: size,
+      height: size,
+      borderWidth: 0.8,
+      borderColor: BLACK,
+    });
+  } else {
+    page.drawRectangle({
+      x,
+      y,
+      width: size,
+      height: size,
+      borderColor: BLACK,
+      borderWidth: 0.8,
+      color: WHITE,
+    });
+  }
 }
 
 function drawDivider(page: PDFPage, y: number, color: RGB = LIGHT) {
@@ -177,6 +190,8 @@ function drawFooter(ctx: Ctx) {
 
 function newPage(ctx: Ctx): Ctx {
   const page = ctx.doc.addPage([PW, PH]);
+  (page as any).isInteractive = true;
+  (page as any).doc = ctx.doc;
   const next = { ...ctx, page, pageNum: ctx.pageNum + 1 };
   drawHeader(next);
   drawFooter(next);
@@ -498,9 +513,20 @@ function pageCover(ctx: Ctx) {
     borderWidth: 0.6,
   });
   const labels = ["Cliente:", "Modelo:"];
+  const form = ctx.doc.getForm();
   labels.forEach((l, i) => {
     const yy = cardY + 50 - i * 25;
     drawText(page, l, MARGIN + 16, yy, { font: bold, size: 10 });
+    
+    const textField = form.createTextField(`cover-${l}`);
+    textField.addToPage(page, {
+      x: MARGIN + 80,
+      y: yy - 4,
+      width: PW - MARGIN - 80 - 16,
+      height: 14,
+      borderWidth: 0,
+    });
+
     page.drawLine({
       start: { x: MARGIN + 80, y: yy - 2 },
       end: { x: PW - MARGIN - 16, y: yy - 2 },
@@ -793,8 +819,9 @@ function pageButtonsDiagram(ctx: Ctx) {
     "Camera Control responde ao toque (modelos Pro)",
     "Bandeja do SIM abre sem trava",
   ];
-  for (const it of items) {
-    drawCheckbox(page, MARGIN, yy, 10);
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    drawCheckbox(page, MARGIN, yy, 10, `btn-check-${i}`);
     drawText(page, it, MARGIN + 18, yy + 1, { font, size: 9.5 });
     yy -= 18;
   }
@@ -856,12 +883,22 @@ function pageAesthetic(ctx: Ctx) {
     states.forEach((s, i) => {
       const xx = cx + (i % 3) * 130;
       const yyc = cy - Math.floor(i / 3) * 20;
-      drawCheckbox(page, xx, yyc, 9);
+      drawCheckbox(page, xx, yyc, 9, `aesthetic-${f.label}-${s}`);
       drawText(page, s, xx + 14, yyc, { font, size: 9 });
     });
 
     // observation line
     drawText(page, "Obs:", MARGIN + 90, yy - cardH + 14, { font: bold, size: 8.5 });
+    
+    const obsField = ctx.doc.getForm().createTextField(`obs-${f.label}`);
+    obsField.addToPage(page, {
+      x: MARGIN + 115,
+      y: yy - cardH + 13,
+      width: PW - MARGIN - 115 - 16,
+      height: 10,
+      borderWidth: 0,
+    });
+
     page.drawLine({
       start: { x: MARGIN + 115, y: yy - cardH + 13 },
       end: { x: PW - MARGIN - 16, y: yy - cardH + 13 },
@@ -915,8 +952,9 @@ function pageJcid(ctx: Ctx) {
     "True Tone e brilho automático OK",
     "Conector de carga e carregamento sem fio funcionando",
   ];
-  for (const c of checks) {
-    drawCheckbox(page, MARGIN, yy, 9);
+  for (let i = 0; i < checks.length; i++) {
+    const c = checks[i];
+    drawCheckbox(page, MARGIN, yy, 9, `jcid-check-${i}`);
     drawText(page, c, MARGIN + 16, yy, { font, size: 9.5 });
     yy -= 16;
   }
@@ -1069,6 +1107,8 @@ export async function generateManualPdf(branding: BrandingInput): Promise<Uint8A
   // Helper to build subsequent pages
   const build = (drawer: (c: Ctx) => void, n: number) => {
     const p = doc.addPage([PW, PH]);
+    (p as any).isInteractive = true;
+    (p as any).doc = doc;
     const c: Ctx = { ...ctxBase, page: p, pageNum: n };
     drawHeader(c);
     drawFooter(c);
