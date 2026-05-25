@@ -103,57 +103,36 @@ function drawWrapped(
   return y - lines.length * lh;
 }
 
-function drawSwitch(page: PDFPage, x: number, y: number, label?: string) {
-  const width = 26;
-  const height = 15;
-  const borderRadius = height / 2;
+function drawCheckbox(page: PDFPage, x: number, y: number, size = 12, label?: string) {
+  const borderRadius = 3;
   
-  // Base background for the switch
-  roundedRect(page, x, y, width, height, borderRadius, { 
-    fill: rgb(0.9, 0.9, 0.92), 
-    stroke: rgb(0.85, 0.85, 0.87),
-    thickness: 0.4 
-  });
-
   if ((page as any).isInteractive) {
     const form = (page as any).doc.getForm();
-    const checkBox = form.createCheckBox(label || `sw-${Math.random()}`);
+    const checkBox = form.createCheckBox(label || `cb-${Math.random()}`);
     
-    // Transparent checkbox overlay
     checkBox.addToPage(page, {
       x,
       y,
-      width,
-      height,
-      borderWidth: 0,
-      backgroundColor: undefined,
+      width: size,
+      height: size,
+      borderWidth: 0.8,
+      borderColor: rgb(0.8, 0.8, 0.8),
+      backgroundColor: WHITE,
     });
     
-    // We draw the "thumb" in a neutral "off" position for the static PDF content
-    // Users can click the invisible checkbox overlay.
-    // Note: To have the thumb move, we'd need PDF appearances (XObjects), which are complex to build manually.
-    // Instead, we ensure the UI looks clean and minimal.
-    page.drawCircle({
-      x: x + borderRadius,
-      y: y + borderRadius,
-      size: borderRadius - 2,
-      color: WHITE,
-      borderColor: rgb(0.8, 0.8, 0.8),
-      borderWidth: 0.2,
+    // Draw the rounded background behind the interactive field for aesthetics
+    roundedRect(page, x, y, size, size, borderRadius, { 
+      fill: WHITE, 
+      stroke: rgb(0.8, 0.8, 0.8),
+      thickness: 0.8 
     });
   } else {
-    page.drawCircle({
-      x: x + borderRadius,
-      y: y + borderRadius,
-      size: borderRadius - 2,
-      color: WHITE,
+    roundedRect(page, x, y, size, size, borderRadius, { 
+      fill: WHITE,
+      stroke: rgb(0.4, 0.4, 0.4),
+      thickness: 0.8
     });
   }
-}
-
-function drawCheckbox(page: PDFPage, x: number, y: number, size = 10, label?: string) {
-  // Use a cleaner, slightly larger switch style
-  drawSwitch(page, x, y - 2, label);
 }
 
 function drawDivider(page: PDFPage, y: number, color: RGB = LIGHT) {
@@ -837,6 +816,7 @@ function pageButtonsDiagram(ctx: Ctx) {
   let yy = pyBottom - 25;
   drawDivider(page, yy + 12);
   drawText(page, "Checklist dos botões", MARGIN, yy, { font: bold, size: 12 });
+  drawText(page, "(Clique no botão para marcar)", MARGIN + 120, yy, { font, size: 8, color: accent });
   yy -= 22;
   const items = [
     "Action Button / switch mute alterna corretamente",
@@ -849,8 +829,8 @@ function pageButtonsDiagram(ctx: Ctx) {
   ];
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
-    drawCheckbox(page, MARGIN, yy, 10, `btn-check-${i}`);
-    drawText(page, it, MARGIN + 32, yy + 1, { font, size: 9.5 });
+    drawCheckbox(page, MARGIN, yy, 12, `btn-check-${i}`);
+    drawText(page, it, MARGIN + 22, yy + 2, { font, size: 9.5 });
     yy -= 18;
   }
 }
@@ -904,6 +884,7 @@ function pageAesthetic(ctx: Ctx) {
 
     // label
     drawText(page, f.label, MARGIN + 90, yy - 18, { font: bold, size: 12 });
+    drawText(page, "(Clique no botão para marcar)", MARGIN + 180, yy - 18, { font, size: 7, color: accent });
 
     // checkboxes
     let cx = MARGIN + 90;
@@ -911,8 +892,8 @@ function pageAesthetic(ctx: Ctx) {
     states.forEach((s, i) => {
       const xx = cx + (i % 3) * 130;
       const yyc = cy - Math.floor(i / 3) * 20;
-      drawCheckbox(page, xx, yyc, 9, `aesthetic-${f.label}-${s}`);
-      drawText(page, s, xx + 28, yyc + 1, { font, size: 9 });
+      drawCheckbox(page, xx, yyc, 11, `aesthetic-${f.label}-${s}`);
+      drawText(page, s, xx + 18, yyc + 2, { font, size: 9 });
     });
 
     // observation line
@@ -969,6 +950,7 @@ function pageJcid(ctx: Ctx) {
   yy -= 14;
 
   drawText(page, "2. O que o relatório deve mostrar", MARGIN, yy, { font: bold, size: 12 });
+  drawText(page, "(Clique no botão para marcar)", MARGIN + 200, yy, { font, size: 8, color: accent });
   yy -= 20;
   const checks = [
     "Saúde da bateria (% e ciclos)",
@@ -982,8 +964,8 @@ function pageJcid(ctx: Ctx) {
   ];
   for (let i = 0; i < checks.length; i++) {
     const c = checks[i];
-    drawCheckbox(page, MARGIN, yy, 9, `jcid-check-${i}`);
-    drawText(page, c, MARGIN + 32, yy + 1, { font, size: 9.5 });
+    drawCheckbox(page, MARGIN, yy, 11, `jcid-check-${i}`);
+    drawText(page, c, MARGIN + 22, yy + 1, { font, size: 9.5 });
     yy -= 16;
   }
 
